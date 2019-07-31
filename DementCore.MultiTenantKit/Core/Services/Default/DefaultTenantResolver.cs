@@ -10,12 +10,16 @@ namespace DementCore.MultiTenantKit.Core.Services.Default
 {
     public class DefaultTenantResolver : ITenantResolver
     {
-
         //https://blog.markvincze.com/matching-route-templates-manually-in-asp-net-core/
-
 
         //https://gunnarpeipman.com/net/ef-core-global-query-filters/
 
+        private string RouteTemplate { get; set; }
+
+        public DefaultTenantResolver(string routePattern)
+        {
+            RouteTemplate = routePattern;
+        }
 
         public RouteValueDictionary Match(string routeTemplate, string requestPath)
         {

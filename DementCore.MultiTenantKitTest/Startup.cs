@@ -38,9 +38,12 @@ namespace MyMultitenantWebApplication
             });
 
             services.AddTenantResolver()
-                .AddDefaultTenantProviderService<MyTenant>()
-                .AddCustomTenantResolver<MyCustomTenantResolver>()
-                .AddCustomTenantStore<MyCustomTenantStore, MyTenant>();
+                .AddDefaultTenantResolver("/{tenant}/{*Accion}")
+                .AddDefaultTenantMapper()
+                .AddDefaultTenantStore<MyTenant>()
+                .AddDefaultTenantProviderService<MyTenant>();
+            //.AddCustomTenantResolver<MyCustomTenantResolver>()
+            //.AddCustomTenantStore<MyCustomTenantStore, MyTenant>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

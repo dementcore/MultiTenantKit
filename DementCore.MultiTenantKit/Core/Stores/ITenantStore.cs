@@ -1,4 +1,5 @@
 ﻿using DementCore.MultiTenantKit.Core.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Stores
@@ -9,6 +10,8 @@ namespace DementCore.MultiTenantKit.Core.Stores
     /// <typeparam name="TTenant"></typeparam>
     public interface ITenantStore<TTenant> where TTenant :  ITenant
     {
-        Task<TTenant> GetTenantInfo(string tenantId);
+        List<TTenant> GetTenants();
+
+        TTenant GetTenantByTenantId(string tenantId);
     }
 }

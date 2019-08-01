@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Routing.Template;
 
 namespace DementCore.MultiTenantKit.Core.Services.Default
 {
-    public class DefaultTenantResolver : ITenantResolver
+    public class TenantSlugResolverService : ITenantResolverService
     {
         //https://blog.markvincze.com/matching-route-templates-manually-in-asp-net-core/
 
         //https://gunnarpeipman.com/net/ef-core-global-query-filters/
 
-        public Task<string> ResolveTenantAsync(HttpContext httpRequest)
+        public Task<string> ResolveTenantSlugAsync(HttpContext httpRequest)
         {
             string tenantSlug = "";
 

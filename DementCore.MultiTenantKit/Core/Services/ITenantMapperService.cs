@@ -8,8 +8,8 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// <summary>
     /// Interface de servicio para realizar el mapeo del slug del inquilino al identificador del inquilino
     /// </summary>
-    public interface ITenantMapper
+    public interface ITenantMapperService
     {
-        Task<string> MapTenantFromSlug(string slug);
+        Task<string> MapTenantFromSlugAsync(string slug);
     }
 }

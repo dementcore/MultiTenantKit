@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace MyMultitenantWebApplication.MultiTenantImplementations
 {
-    public class MyCustomTenantResolver : ITenantResolver
+    public class MyCustomTenantResolver : ITenantResolverService
     {
-        public Task<string> ResolveTenantAsync(HttpContext httpRequest)
+        public Task<string> ResolveTenantSlugAsync(HttpContext httpRequest)
         {
             return Task.FromResult("carlos");
         }

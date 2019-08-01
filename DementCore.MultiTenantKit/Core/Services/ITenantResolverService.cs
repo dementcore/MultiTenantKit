@@ -9,8 +9,8 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// <summary>
     /// Interface de servicio para realizar la resolución del slug del tenant a partir de la ruta
     /// </summary>
-    public interface ITenantResolver
+    public interface ITenantResolverService
     {
-        Task<string> ResolveTenantAsync(HttpContext httpRequest);
+        Task<string> ResolveTenantSlugAsync(HttpContext httpRequest);
     }
 }

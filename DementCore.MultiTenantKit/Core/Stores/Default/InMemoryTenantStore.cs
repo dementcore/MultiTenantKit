@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Stores.Default
 {
-    public class DefaultTenantStore<TTenant> : ITenantStore<TTenant> where TTenant : ITenant
+    public class InMemoryTenantStore<TTenant> : ITenantStore<TTenant> where TTenant : ITenant
     {
         IConfiguration Configuration { get; }
 
-        public DefaultTenantStore(IConfiguration configuration)
+        public InMemoryTenantStore(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -60,6 +60,16 @@ namespace DementCore.MultiTenantKit.Core.Stores.Default
 
                 return Task.FromResult(entidad);
             }
+        }
+
+        public List<TTenant> GetTenants()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TTenant GetTenantByTenantId(string tenantId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

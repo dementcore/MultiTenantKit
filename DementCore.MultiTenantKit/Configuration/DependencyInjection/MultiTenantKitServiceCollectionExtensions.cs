@@ -19,9 +19,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IMultiTenantKitBuilder<TTenant> AddMultiTenantKit<TTenant>(this IServiceCollection services) where TTenant : ITenant
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<ITenantResolver, DefaultTenantResolver>();
-            services.AddTransient<ITenantMapper, DefaultTenantMapper>();
-            services.AddTransient<ITenantStore<TTenant>, DefaultTenantStore<TTenant>>();
+            services.AddScoped<ITenantResolverService, TenantSlugResolverService>();
+            services.AddScoped<ITenantMapperService, TenantSlugMapperService>();
+            services.AddScoped<ITenantInfoService<TTenant>, TenantInfoService<TTenant>>();
            
             return new MultiTenantKitBuilder<TTenant>(services);
         }

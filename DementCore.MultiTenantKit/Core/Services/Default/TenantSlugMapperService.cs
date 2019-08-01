@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services.Default
 {
-    public class DefaultTenantMapper : ITenantMapper
+    public class TenantSlugMapperService : ITenantMapperService
     {
         private IConfiguration Configuration { get; }
 
-        public DefaultTenantMapper(IConfiguration configuration)
+        public TenantSlugMapperService(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public Task<string> MapTenantFromSlug(string slug)
+        public Task<string> MapTenantFromSlugAsync(string slug)
         {
             IConfigurationSection cs = Configuration.GetSection("Tenants:TenantsSlugs");
             List<TenantSlug> tenantSlugs = new List<TenantSlug>();

@@ -40,7 +40,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
         public static IMultiTenantKitBuilder<TTenant> AddCustomTenantResolver<TTenant>(this IMultiTenantKitBuilder<TTenant> builder, Type implementationType)
             where TTenant : ITenant
         {
-            builder.Services.AddTransient(typeof(ITenantResolver), implementationType);
+            builder.Services.AddTransient(typeof(ITenantResolverService), implementationType);
 
             return builder;
         }
@@ -69,7 +69,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
         public static IMultiTenantKitBuilder<TTenant> AddCustomTenantMapper<TTenant>(this IMultiTenantKitBuilder<TTenant> builder, Type implementationType)
             where TTenant : ITenant
         {
-            builder.Services.AddTransient(typeof(ITenantMapper), implementationType);
+            builder.Services.AddTransient(typeof(ITenantMapperService), implementationType);
 
             return builder;
         }

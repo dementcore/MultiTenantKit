@@ -39,7 +39,7 @@ namespace MyMultitenantWebApplication
 
             services.AddTenantResolver()
                 .AddDefaultTenantResolver("/{tenant}/{*Accion}")
-                .AddDefaultTenantMapper()
+                .AddDefaultTenantMapper() 
                 .AddDefaultTenantStore<MyTenant>()
                 .AddDefaultTenantProviderService<MyTenant>();
             //.AddCustomTenantResolver<MyCustomTenantResolver>()

@@ -7,19 +7,34 @@ namespace MyMultitenantWebApplication.MultiTenantImplementations
     {
         public Task<MyTenant> GetTenantInfo(string tenantId)
         {
-            if (tenantId != "carlos")
-            {
-                return Task.FromResult<MyTenant>(null);
-            }
-
             MyTenant tenantImp = new MyTenant()
             {
                 Id = "1",
-                Name = "Carlos SA",
+                Name = "Tenant 1",
+                CSSTheme = "/css/site.css"
+            };
+
+            MyTenant tenantImp2 = new MyTenant()
+            {
+                Id = "2",
+                Name = "Tenant 2",
                 CSSTheme = "/css/site2.css"
             };
 
-            return Task.FromResult(tenantImp);
+            switch (tenantId)
+            {
+                case "1":
+                    return Task.FromResult(tenantImp);
+                    break;
+
+                case "2":
+                    return Task.FromResult(tenantImp2);
+                    break;
+
+                default:
+                    return Task.FromResult(new MyTenant());
+                    break;
+            }
         }
     }
 }

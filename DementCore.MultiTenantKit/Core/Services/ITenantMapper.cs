@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
@@ -9,6 +10,6 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// </summary>
     public interface ITenantMapper
     {
-        string MapTenantFromSlug(string slug);
+        Task<string> MapTenantFromSlug(string slug);
     }
 }

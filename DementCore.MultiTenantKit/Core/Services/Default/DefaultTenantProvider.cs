@@ -14,7 +14,7 @@ namespace DementCore.MultiTenantKit.Core.Services.Default
 
         public TTenant GetTenant()
         {
-            TTenant tenant = HttpContextAccessor.HttpContext.GetTenant<TTenant>();
+            TTenant tenant = HttpContextAccessor.HttpContext.GetTenantContext<TTenant>().Tenant;
 
             return tenant;
         }

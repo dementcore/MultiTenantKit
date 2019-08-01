@@ -14,45 +14,18 @@ namespace DementCore.MultiTenantKit.Core.Services.Default
 
         //https://gunnarpeipman.com/net/ef-core-global-query-filters/
 
-        private string RouteTemplate { get; set; }
-
-        public DefaultTenantResolver(string routePattern)
-        {
-            RouteTemplate = routePattern;
-        }
-
-        public RouteValueDictionary Match(string routeTemplate, string requestPath)
-        {
-            RouteTemplate template = TemplateParser.Parse(routeTemplate);
-
-            TemplateMatcher matcher = new TemplateMatcher(template, GetDefaults(template));
-
-            RouteValueDictionary values = null;
-
-            matcher.TryMatch(requestPath, values);
-
-            return values;
-        }
-
-        // This method extracts the default argument values from the template.
-        private RouteValueDictionary GetDefaults(RouteTemplate parsedTemplate)
-        {
-            var result = new RouteValueDictionary();
-
-            foreach (var parameter in parsedTemplate.Parameters)
-            {
-                if (parameter.DefaultValue != null)
-                {
-                    result.Add(parameter.Name, parameter.DefaultValue);
-                }
-            }
-
-            return result;
-        }
-
         public Task<string> ResolveTenantAsync(HttpContext httpRequest)
         {
-            throw new NotImplementedException();
+            string tenantSlug = "";
+
+            var rData = httpRequest.GetRouteData();
+
+            if (rData != null && rData.Values != null && rData.Values.ContainsKey("tenant"))
+            {
+                tenantSlug = rData.Values.GetValueOrDefault("tenant").ToString();
+            }
+
+            return Task.FromResult(tenantSlug);
         }
     }
 }

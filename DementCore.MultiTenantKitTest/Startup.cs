@@ -1,4 +1,5 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
+using DementCore.MultiTenantKit.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyMultitenantWebApplication.MultiTenantImplementations;
-using System;
 
 namespace MyMultitenantWebApplication
 {
@@ -29,24 +29,9 @@ namespace MyMultitenantWebApplication
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.Configure<MultiTenantKitMiddlewareOptions>(options =>
-            {
-                options.IncludeInUserClaims = true;
-                options.IncludeOnlyIfAuthenticated = false;
-                options.IncludeInHttpContext = true;
-                options.ClaimsPrefix = "Inquilino_";
-            });
-
-            services.AddTenantResolver()
-                .AddDefaultTenantResolver("/{tenant}/{*Accion}")
-                .AddDefaultTenantMapper() 
-                .AddDefaultTenantStore<MyTenant>()
-                .AddDefaultTenantProviderService<MyTenant>();
-            //.AddCustomTenantResolver<MyCustomTenantResolver>()
-            //.AddCustomTenantStore<MyCustomTenantStore, MyTenant>();
+            services.AddMultiTenantKit<MyTenant>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,13 +49,14 @@ namespace MyMultitenantWebApplication
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseTenantResolverMiddleware<MyTenant>();
+            app.UseMultiTenantKit<MyTenant>();
 
             app.UseMvc(routes =>
             {
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{tenant}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

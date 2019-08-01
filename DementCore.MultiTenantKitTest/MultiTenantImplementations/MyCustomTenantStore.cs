@@ -5,9 +5,9 @@ namespace MyMultitenantWebApplication.MultiTenantImplementations
 {
     public class MyCustomTenantStore : ITenantStore<MyTenant>
     {
-        public Task<MyTenant> GetTenantInfo(string tenant)
+        public Task<MyTenant> GetTenantInfo(string tenantId)
         {
-            if (tenant != "carlos")
+            if (tenantId != "carlos")
             {
                 return Task.FromResult<MyTenant>(null);
             }

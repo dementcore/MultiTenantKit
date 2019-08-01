@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DementCore.MultiTenantKit.Core.Context;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyMultitenantWebApplication.Models;
 using MyMultitenantWebApplication.MultiTenantImplementations;
@@ -8,15 +9,15 @@ namespace MyMultitenantWebApplication.Controllers
 {
     public class HomeController : Controller
     {
-
+        [Route("{tenant}/Dashboard")]
         public IActionResult Index()
         {
             IndexModel model = new IndexModel();
 
-            MyTenant tenant = HttpContext.GetTenant<MyTenant>();
+            TenantContext<MyTenant> tenantCtx = HttpContext.GetTenantContext<MyTenant>();
 
-            model.TenantName = tenant.Name;
-           
+            model.TenantName = tenantCtx.Tenant.Name;
+
             return View(model);
         }
 

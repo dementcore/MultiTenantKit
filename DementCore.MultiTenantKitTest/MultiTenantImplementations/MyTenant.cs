@@ -7,10 +7,6 @@ namespace MyMultitenantWebApplication.MultiTenantImplementations
 {
     public class MyTenant : ITenant
     {
-        public MyTenant()
-        {
-            Properties = new Dictionary<object, object>();
-        }
 
         [TenantId]
         public string Id { get; set; }
@@ -18,8 +14,6 @@ namespace MyMultitenantWebApplication.MultiTenantImplementations
         public string Name { get; set; }
 
         public string CSSTheme { get; set; }
-
-        public Dictionary<object, object> Properties { get; set; }
 
     }
 }

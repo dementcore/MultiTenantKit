@@ -1,4 +1,5 @@
-﻿using DementCore.MultiTenantKit.Core.Models;
+﻿using DementCore.MultiTenantKit.Core.Context;
+using DementCore.MultiTenantKit.Core.Models;
 
 namespace Microsoft.AspNetCore.Http
 {
@@ -10,16 +11,16 @@ namespace Microsoft.AspNetCore.Http
         /// <typeparam name="TTenant">tipo que define el inquilino</typeparam>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        public static TTenant GetTenant<TTenant>(this HttpContext httpContext)
+        public static TenantContext<TTenant> GetTenantContext<TTenant>(this HttpContext httpContext)
             where TTenant : ITenant
         {
-            return (TTenant)httpContext.Items["Tenant"];
+            return (TenantContext<TTenant>)httpContext.Items["TenantContext"];
         }
 
-        internal static void SetTenant<TTenant>(this HttpContext httpContext, TTenant tenant)
+        internal static void SetTenantContext<TTenant>(this HttpContext httpContext, TenantContext<TTenant> tenantContext)
             where TTenant : ITenant
         {
-            httpContext.Items.Add("Tenant", tenant);
+            httpContext.Items.Add("TenantContext", tenantContext);
         }
     }
 }

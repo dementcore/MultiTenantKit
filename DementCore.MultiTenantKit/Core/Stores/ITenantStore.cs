@@ -9,6 +9,6 @@ namespace DementCore.MultiTenantKit.Core.Stores
     /// <typeparam name="TTenant"></typeparam>
     public interface ITenantStore<TTenant> where TTenant :  ITenant
     {
-        Task<TTenant> GetTenantInfo(string tenant);
+        Task<TTenant> GetTenantInfo(string tenantId);
     }
 }

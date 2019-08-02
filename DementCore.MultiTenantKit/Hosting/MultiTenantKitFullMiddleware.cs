@@ -1,21 +1,20 @@
-﻿using DementCore.MultiTenantKit.Core;
-using DementCore.MultiTenantKit.Core.Context;
+﻿using DementCore.MultiTenantKit.Core.Context;
 using DementCore.MultiTenantKit.Core.Models;
 using DementCore.MultiTenantKit.Core.Services;
-using DementCore.MultiTenantKit.Core.Stores;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Hosting
 {
-    public class MultiTenantKitMiddleware<TTenant> where TTenant : ITenant
+    /// <summary>
+    /// This middleware needs the three services: Resolver, Mapper,Info
+    /// </summary>
+    /// <typeparam name="TTenant"></typeparam>
+    public class MultiTenantKitFullMiddleware<TTenant> where TTenant : ITenant
     {
         private readonly RequestDelegate _next;
 
-        public MultiTenantKitMiddleware(RequestDelegate next)
+        public MultiTenantKitFullMiddleware(RequestDelegate next)
         {
             _next = next;
         }

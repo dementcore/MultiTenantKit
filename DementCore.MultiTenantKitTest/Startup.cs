@@ -1,4 +1,5 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
+using DementCore.MultiTenantKit.Configuration.Options;
 using DementCore.MultiTenantKit.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,7 +33,10 @@ namespace MyMultitenantWebApplication
             services.AddMultiTenantKit()
                 .AddInMemoryTenants<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
                 .AddInMemoryTenantSlugs<TenantSlugs>(Configuration.GetSection("Tenants:TenantsSlugs"))
-                .AddDefaultTenantResolverService()
+                .AddTenantPathResolverService(options =>
+                {
+                    options.RouteSegmentName = "Inquilino";
+                })
                 .AddDefaultTenantMapperService<TenantSlugs>()
                 .AddDefaultTenantInfoService<MyTenant>();
 

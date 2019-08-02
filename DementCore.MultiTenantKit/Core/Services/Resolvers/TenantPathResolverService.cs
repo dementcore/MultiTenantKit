@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DementCore.MultiTenantKit.Configuration.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantResolverService : ITenantResolverService
+    internal class TenantPathResolverService : ITenantResolverService
     {
-        //https://blog.markvincze.com/matching-route-templates-manually-in-asp-net-core/
+        private PathResolverOptions Options { get; }
 
-        //https://gunnarpeipman.com/net/ef-core-global-query-filters/
+        public TenantPathResolverService(IOptionsMonitor<PathResolverOptions> options)
+        {
+            Options = options.CurrentValue;
+        }
 
         public Task<string> ResolveTenantAsync(HttpContext httpContext)
         {
@@ -26,9 +31,9 @@ namespace DementCore.MultiTenantKit.Core.Services
 
             RouteData rData = httpContext.GetRouteData();
 
-            if (rData != null && rData.Values != null && rData.Values.ContainsKey("tenant"))
+            if (rData != null && rData.Values != null && rData.Values.ContainsKey(Options.RouteSegmentName))
             {
-                tenantRouteFragment = rData.Values.GetValueOrDefault("tenant").ToString();
+                tenantRouteFragment = rData.Values.GetValueOrDefault(Options.RouteSegmentName).ToString();
             }
 
             return tenantRouteFragment;

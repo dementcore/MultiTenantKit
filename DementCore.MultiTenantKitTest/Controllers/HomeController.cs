@@ -9,7 +9,7 @@ namespace MyMultitenantWebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        [Route("{tenant}/Dashboard")]
+        [Route("{Inquilino}/Dashboard")]
         public IActionResult Index()
         {
             IndexModel model = new IndexModel();
@@ -21,6 +21,7 @@ namespace MyMultitenantWebApplication.Controllers
             return View(model);
         }
 
+        [Route("{Inquilino}/Privacy")]
         public IActionResult Privacy()
         {
             return View();

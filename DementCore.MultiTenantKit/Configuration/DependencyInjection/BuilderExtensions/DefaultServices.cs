@@ -1,4 +1,5 @@
-﻿using DementCore.MultiTenantKit.Core.Models;
+﻿using DementCore.MultiTenantKit.Configuration.Options;
+using DementCore.MultiTenantKit.Core.Models;
 using DementCore.MultiTenantKit.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,12 +10,33 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class DefaultServices
     {
-        public static IMultiTenantKitBuilder AddDefaultTenantResolverService(this IMultiTenantKitBuilder builder)
+        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder)
         {
-            builder.Services.AddTransient<ITenantResolverService, TenantResolverService>();
+
+            builder.AddTenantPathResolverService("tenant");
 
             return builder;
         }
+
+        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder, string routeSegmentName)
+        {
+            builder.AddTenantPathResolverService(options =>
+            {
+                options.RouteSegmentName = routeSegmentName;
+            });
+
+            return builder;
+        }
+
+        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder, Action<PathResolverOptions> configureOptions)
+        {
+            builder.Services.Configure(configureOptions);
+
+            builder.Services.AddTransient<ITenantResolverService, TenantPathResolverService>();
+
+            return builder;
+        }
+
 
         public static IMultiTenantKitBuilder AddDefaultTenantMapperService<TTenantSlugs>(this IMultiTenantKitBuilder builder)
             where TTenantSlugs : ITenantSlugs
@@ -36,7 +58,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             where TTenant : ITenant
         {
             builder.Services.AddScoped<ITenantProvider<TTenant>, TenantProviderService<TTenant>>();
-            
+
             return builder;
         }
 

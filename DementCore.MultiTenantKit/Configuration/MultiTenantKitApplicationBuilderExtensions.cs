@@ -6,20 +6,28 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class MultiTenantKitApplicationBuilderExtensions
     {
-        /// <summary>
-        /// Registra el middleware de resolución de inquilinos en la peticion
-        /// </summary>
-        /// <typeparam name="TTenant">Tipo que representa el inquilino</typeparam>
-        /// <param name="builder"></param>
-        /// <returns></returns>
+
         public static IApplicationBuilder UseMultiTenantKit<TTenant>(this IApplicationBuilder builder)
             where TTenant : ITenant
         {
-            //esto hace que podamos obtener el RouteData en un middleware previo al middleware de MVC que por norma general es el ultimo.
+            return UseMultiTenantKit<TTenant>(builder, true);
+        }
+
+        public static IApplicationBuilder UseMultiTenantKit<TTenant>(this IApplicationBuilder builder, bool UseMapperService)
+          where TTenant : ITenant
+        {
             builder.UseEndpointRouting();
 
-            return builder.UseMiddleware<MultiTenantKitMiddleware<TTenant>>();
+            if (UseMapperService)
+            {
+                return builder.UseMiddleware<MultiTenantKitFullMiddleware<TTenant>>();
+            }
+            else
+            {
+                return builder.UseMiddleware<MultiTenantKitWithoutMapperMiddleware<TTenant>>();
+            }
         }
+
     }
 }
 

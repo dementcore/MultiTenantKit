@@ -7,17 +7,21 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class Store
     {
-        /// <summary>
-        /// Registra un servicio personalizado de recuperación de información sobre el inquilino.
-        /// </summary>
-        /// <typeparam name="T">Tipo de la implementacion de ITenantStore</typeparam>
-        /// <typeparam name="TTenant">Tipo que representa el inquilino</typeparam>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IMultiTenantKitBuilder<TTenant> AddCustomTenantStore<TTenant>(this IMultiTenantKitBuilder<TTenant> builder, Type implementationType)
+
+        public static IMultiTenantKitBuilder AddCustomTenantStore<TTenant, TTenantStore>(this IMultiTenantKitBuilder builder)
             where TTenant : ITenant
+            where TTenantStore : class, ITenantStore<TTenant>
         {
-            builder.Services.AddTransient(typeof(ITenantStore<TTenant>), implementationType);
+            builder.Services.AddTransient<ITenantStore<TTenant>, TTenantStore>();
+
+            return builder;
+        }
+
+        public static IMultiTenantKitBuilder AddCustomTenantSlugsStore<TTenantSlug, TTenantSlugStore>(this IMultiTenantKitBuilder builder)
+            where TTenantSlug : ITenantSlugs
+            where TTenantSlugStore : class, ITenantSlugsStore<TTenantSlug>
+        {
+            builder.Services.AddTransient<ITenantSlugsStore<TTenantSlug>, TTenantSlugStore>();
 
             return builder;
         }

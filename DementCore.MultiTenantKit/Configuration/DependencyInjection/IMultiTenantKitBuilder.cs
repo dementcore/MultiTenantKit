@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Configuration.DependencyInjection
 {
-    public interface IMultiTenantKitBuilder<TTenant> where TTenant : ITenant
+    public interface IMultiTenantKitBuilder
     {
         /// <summary>
         /// Servicios del sistema

@@ -20,22 +20,22 @@ namespace DementCore.MultiTenantKit.Hosting
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, ITenantResolverService tenantResolverService, ITenantMapperService tenantMapperService, ITenantStore<TTenant> tenantStoreService)
+        public async Task Invoke(HttpContext httpContext, ITenantResolverService tenantResolverService, ITenantMapperService tenantMapperService, ITenantInfoService<TTenant> tenantInfoService)
         {
             string tenantSlug = "";
             string tenantId = "";
             TTenant tenant = default;
 
-            tenantSlug = await tenantResolverService.ResolveTenantSlugAsync(httpContext);
+            tenantSlug = await tenantResolverService.ResolveTenantAsync(httpContext);
 
             if (!string.IsNullOrWhiteSpace(tenantSlug))
             {
-                tenantId = await tenantMapperService.MapTenantFromSlugAsync(tenantSlug);
+                tenantId = await tenantMapperService.MapTenantAsync(tenantSlug);
             }
 
             if (!string.IsNullOrWhiteSpace(tenantId))
             {
-                tenant = await tenantStoreService.GetTenantInfo(tenantId);
+                tenant = await tenantInfoService.GetTenantInfoAsync(tenantId);
             }
 
             TenantContext<TTenant> tenantContext = new TenantContext<TTenant>(tenant, tenantSlug);

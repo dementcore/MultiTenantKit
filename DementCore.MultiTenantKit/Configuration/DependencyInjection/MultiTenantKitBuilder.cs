@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DementCore.MultiTenantKit.Configuration.DependencyInjection
 {
-    public class MultiTenantKitBuilder<TTenant> : IMultiTenantKitBuilder<TTenant> where TTenant : ITenant
+    public class MultiTenantKitBuilder : IMultiTenantKitBuilder
     {
         public MultiTenantKitBuilder(IServiceCollection services)
         {

@@ -29,7 +29,12 @@ namespace MyMultitenantWebApplication
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMultiTenantKit<MyTenant>();
+            services.AddMultiTenantKit()
+                .AddInMemoryTenants<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
+                .AddInMemoryTenantSlugs<TenantSlugs>(Configuration.GetSection("Tenants:TenantsSlugs"))
+                .AddDefaultTenantResolverService()
+                .AddDefaultTenantMapperService<TenantSlugs>()
+                .AddDefaultTenantInfoService<MyTenant>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

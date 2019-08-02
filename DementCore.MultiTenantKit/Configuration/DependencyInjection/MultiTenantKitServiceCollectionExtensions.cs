@@ -1,9 +1,6 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection;
 using DementCore.MultiTenantKit.Core.Models;
 using DementCore.MultiTenantKit.Core.Services;
-using DementCore.MultiTenantKit.Core.Services.Default;
-using DementCore.MultiTenantKit.Core.Stores;
-using DementCore.MultiTenantKit.Core.Stores.Default;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -16,14 +13,11 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IMultiTenantKitBuilder<TTenant> AddMultiTenantKit<TTenant>(this IServiceCollection services) where TTenant : ITenant
+        public static IMultiTenantKitBuilder AddMultiTenantKit(this IServiceCollection services)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ITenantResolverService, TenantSlugResolverService>();
-            services.AddScoped<ITenantMapperService, TenantSlugMapperService>();
-            services.AddScoped<ITenantInfoService<TTenant>, TenantInfoService<TTenant>>();
-           
-            return new MultiTenantKitBuilder<TTenant>(services);
+            
+            return new MultiTenantKitBuilder(services);
         }
     }
 }

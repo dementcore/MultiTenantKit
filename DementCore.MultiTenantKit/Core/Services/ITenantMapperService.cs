@@ -10,6 +10,6 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// </summary>
     public interface ITenantMapperService
     {
-        Task<string> MapTenantFromSlugAsync(string slug);
+        Task<string> MapTenantAsync(string slug);
     }
 }

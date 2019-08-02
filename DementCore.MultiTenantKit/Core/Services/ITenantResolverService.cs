@@ -11,6 +11,6 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// </summary>
     public interface ITenantResolverService
     {
-        Task<string> ResolveTenantSlugAsync(HttpContext httpRequest);
+        Task<string> ResolveTenantAsync(HttpContext httpContext);
     }
 }

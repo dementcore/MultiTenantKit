@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DementCore.MultiTenantKit.Core.Services.Default
+namespace DementCore.MultiTenantKit.Core.Services
 {
-    public class TenantInfoService<TTenant> : ITenantInfoService<TTenant> where TTenant : ITenant
+    internal class TenantInfoService<TTenant> : ITenantInfoService<TTenant> where TTenant : ITenant
     {
         ITenantStore<TTenant> TenantStore { get; }
 

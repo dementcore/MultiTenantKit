@@ -1,7 +1,6 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection;
 using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
 using DementCore.MultiTenantKit.Core.Models;
-using DementCore.MultiTenantKit.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -23,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var builder = new MultiTenantKitBuilder(services);
+            MultiTenantKitBuilder builder = new MultiTenantKitBuilder(services);
 
             builder.AddInMemoryTenants<Tenant>(configuration.GetSection("Tenants:TenantsData"))
                 .AddInMemoryTenantSlugs<TenantSlugs>(configuration.GetSection("Tenants:TenantsSlugs"))
@@ -36,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var builder = new MultiTenantKitBuilder(services);
+            MultiTenantKitBuilder builder = new MultiTenantKitBuilder(services);
 
             builder.AddInMemoryTenants<Tenant>(tenants)
                 .AddInMemoryTenantSlugs<TenantSlugs>(tenantSlugs)

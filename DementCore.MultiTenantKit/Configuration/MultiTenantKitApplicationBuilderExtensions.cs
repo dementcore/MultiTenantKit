@@ -10,24 +10,10 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseMultiTenantKit<TTenant>(this IApplicationBuilder builder)
             where TTenant : ITenant
         {
-            return UseMultiTenantKit<TTenant>(builder, true);
-        }
-
-        public static IApplicationBuilder UseMultiTenantKit<TTenant>(this IApplicationBuilder builder, bool UseMapperService)
-          where TTenant : ITenant
-        {
             builder.UseEndpointRouting();
 
-            if (UseMapperService)
-            {
-                return builder.UseMiddleware<MultiTenantKitFullMiddleware<TTenant>>();
-            }
-            else
-            {
-                return builder.UseMiddleware<MultiTenantKitWithoutMapperMiddleware<TTenant>>();
-            }
+            return builder.UseMiddleware<MultiTenantKitMiddleware<TTenant>>();
         }
-
     }
 }
 

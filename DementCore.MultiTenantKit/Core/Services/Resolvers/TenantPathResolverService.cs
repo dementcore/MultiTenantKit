@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,13 +17,34 @@ namespace DementCore.MultiTenantKit.Core.Services
             Options = options.CurrentValue;
         }
 
-        public Task<string> ResolveTenantAsync(HttpContext httpContext)
+        public Task<TenantResolveResult> ResolveTenantAsync(HttpContext httpContext)
         {
-            string tenantSlug = "";
+            TenantResolveResult resolveResult = new TenantResolveResult();
 
-            tenantSlug = ExtractSlugFromRoute(httpContext);
+            try
+            {
+                string tenantSlug = "";
 
-            return Task.FromResult(tenantSlug);
+                tenantSlug = ExtractSlugFromRoute(httpContext);
+
+                if (string.IsNullOrWhiteSpace(tenantSlug))
+                {
+                    resolveResult.Success = false;
+                }
+                else
+                {
+                    resolveResult.Success = true;
+                    resolveResult.ResolvedType = ResolvedType.TenantSlug;
+                    resolveResult.Value = tenantSlug;
+                }
+            }
+            catch
+            {
+                resolveResult.Success = false;
+                resolveResult.ErrorMessage = "Unable to resolve the tenant's slug from route";
+            }
+
+            return Task.FromResult(resolveResult);
         }
 
         private string ExtractSlugFromRoute(HttpContext httpContext)

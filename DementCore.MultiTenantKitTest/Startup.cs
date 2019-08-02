@@ -30,6 +30,11 @@ namespace MyMultitenantWebApplication
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //services.Configure<PathResolverOptions>(options =>
+            //{
+            //    options.RouteSegmentName = "Inquilino";
+            //});
+
             services.AddMultiTenantKit()
                 .AddInMemoryTenants<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
                 .AddInMemoryTenantSlugs<TenantSlugs>(Configuration.GetSection("Tenants:TenantsSlugs"))

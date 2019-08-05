@@ -1,4 +1,4 @@
 # DementCore.MultiTenantKit
-WIP - Helps to develop multi tenant web applications
+Kit to easily add tenant resolution to Net Core Web applications
 
 In development

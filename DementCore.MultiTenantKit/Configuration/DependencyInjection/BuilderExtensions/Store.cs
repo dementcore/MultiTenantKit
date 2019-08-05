@@ -17,11 +17,11 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddCustomTenantSlugsStore<TTenantSlug, TTenantSlugStore>(this IMultiTenantKitBuilder builder)
-            where TTenantSlug : ITenantSlugs
-            where TTenantSlugStore : class, ITenantSlugsStore<TTenantSlug>
+        public static IMultiTenantKitBuilder AddCustomTenantMappingStore<TTenantMapping, TTenantMappingStore>(this IMultiTenantKitBuilder builder)
+            where TTenantMapping : ITenantMapping
+            where TTenantMappingStore : class, ITenantMappingStore<TTenantMapping>
         {
-            builder.Services.AddTransient<ITenantSlugsStore<TTenantSlug>, TTenantSlugStore>();
+            builder.Services.AddTransient<ITenantMappingStore<TTenantMapping>, TTenantMappingStore>();
 
             return builder;
         }

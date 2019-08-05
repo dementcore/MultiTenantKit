@@ -4,6 +4,10 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Core.Attributes
 {
+    /// <summary>
+    /// Attribute used to mark the Tenant's Id Property
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class TenantIdAttribute : Attribute
     {
     }

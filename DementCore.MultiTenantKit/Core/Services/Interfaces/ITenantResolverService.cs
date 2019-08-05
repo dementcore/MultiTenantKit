@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DementCore.MultiTenantKit.Core.Services
 {
     /// <summary>
-    /// Interface de servicio para realizar la resolución del slug del tenant a partir de la ruta
+    /// Interface used to implement services to resolve the tenant from the HttpContext
     /// </summary>
     public interface ITenantResolverService
     {

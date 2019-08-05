@@ -11,7 +11,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class InMemory
     {
-        public static IMultiTenantKitBuilder AddInMemoryTenants<TTenant>(this IMultiTenantKitBuilder builder, List<TTenant> tenants)
+        public static IMultiTenantKitBuilder AddInMemoryTenantsStore<TTenant>(this IMultiTenantKitBuilder builder, List<TTenant> tenants)
          where TTenant : ITenant
         {
             builder.Services.AddScoped<ITenantStore<TTenant>, InMemoryTenantStore<TTenant>>(x =>
@@ -22,35 +22,36 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddInMemoryTenants<TTenant>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
+        public static IMultiTenantKitBuilder AddInMemoryTenantsStore<TTenant>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
             where TTenant : ITenant
         {
             List<TTenant> tenants = new List<TTenant>();
 
             configurationSection.Bind(tenants);
 
-            return builder.AddInMemoryTenants(tenants);
+            return builder.AddInMemoryTenantsStore(tenants);
         }
 
-        public static IMultiTenantKitBuilder AddInMemoryTenantSlugs<TTenantSlugs>(this IMultiTenantKitBuilder builder, List<TTenantSlugs> tenantSlugs)
-            where TTenantSlugs : ITenantSlugs
+
+        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore<TTenantMapping>(this IMultiTenantKitBuilder builder, List<TTenantMapping> tenantMappings)
+            where TTenantMapping : ITenantMapping
         {
-            builder.Services.AddScoped<ITenantSlugsStore<TTenantSlugs>, InMemoryTenantSlugsStore<TTenantSlugs>>(x =>
+            builder.Services.AddScoped<ITenantMappingStore<TTenantMapping>, InMemoryTenantMappingStore<TTenantMapping>>(x =>
             {
-                return new InMemoryTenantSlugsStore<TTenantSlugs>(tenantSlugs);
+                return new InMemoryTenantMappingStore<TTenantMapping>(tenantMappings);
             });
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddInMemoryTenantSlugs<TTenantSlugs>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
-             where TTenantSlugs : ITenantSlugs
+        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore<TTenantMapping>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
+             where TTenantMapping : ITenantMapping
         {
-            List<TTenantSlugs> tenantsSlugs = new List<TTenantSlugs>();
+            List<TTenantMapping> tenantMappings = new List<TTenantMapping>();
 
-            configurationSection.Bind(tenantsSlugs);
+            configurationSection.Bind(tenantMappings);
 
-            return builder.AddInMemoryTenantSlugs(tenantsSlugs);
+            return builder.AddInMemoryTenantMappingsStore(tenantMappings);
         }
     }
 }

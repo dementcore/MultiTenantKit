@@ -51,7 +51,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (exception == null)
             {
-                exception = new Exception("Unable to resolve the tenant's slug from route.");
+                exception = new Exception("Unable to resolve the tenant's name from route.");
             }
 
             Value = "";
@@ -68,7 +68,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                errorMessage = "Unable to resolve the tenant's slug from route.";
+                errorMessage = "Unable to resolve the tenant's name from route.";
             }
 
             Value = "";

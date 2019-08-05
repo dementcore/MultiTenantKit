@@ -20,14 +20,15 @@ namespace DementCore.MultiTenantKit.Hosting
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, ITenantResolverService tenantResolverService, ITenantMapperService tenantMapperService, ITenantInfoService<TTenant> tenantInfoService)
+        public async Task Invoke(HttpContext httpContext, ITenantResolverService tenantResolverService, ITenantMapperService tenantMapperService,
+            ITenantInfoService<TTenant> tenantInfoService)
         {
 
             TenantResolveResult _tenantResolveResult = null;
             TenantContext<TTenant> _tenantContext = null;
             TTenant _tenant = default;
             string _tenantId = "";
-            string _tenantSlug = "";
+            string _tenantName = "";
 
             _tenantResolveResult = await tenantResolverService.ResolveTenantAsync(httpContext);
 
@@ -53,31 +54,30 @@ namespace DementCore.MultiTenantKit.Hosting
 
                             if (_tenant == default)
                             {
-                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, ResolutionResult.NotFound);
                             }
                             else
                             {
-                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
                             }
 
                             break;
 
                         #endregion
 
-                        #region ResolutionType.TenantSlug
+                        #region ResolutionType.TenantName
 
                         case ResolutionType.TenantName:
 
-
-                            //only call the mapper service if the resolution is of type tenantSlug
+                            //only call the mapper service if the resolution is of type TenantName
                             if (!string.IsNullOrWhiteSpace(_tenantResolveResult.Value))
                             {
                                 _tenantId = await tenantMapperService.MapTenantAsync(_tenantResolveResult.Value);
 
-                                _tenantSlug = _tenantResolveResult.Value;
+                                _tenantName = _tenantResolveResult.Value;
                             }
 
-                            //call the info service after mapping the tenant slug
+                            //call the info service after mapping the tenant name
                             if (!string.IsNullOrWhiteSpace(_tenantId))
                             {
                                 _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantId);
@@ -85,11 +85,11 @@ namespace DementCore.MultiTenantKit.Hosting
 
                             if (_tenant == default)
                             {
-                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, ResolutionResult.NotFound);
                             }
                             else
                             {
-                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
                             }
 
                             break;
@@ -114,7 +114,7 @@ namespace DementCore.MultiTenantKit.Hosting
                 case ResolutionResult.NotApply:
 
                     //do nothing because the resolution does not apply in this request
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotApply);
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, ResolutionResult.NotApply);
 
                     break;
 
@@ -125,7 +125,7 @@ namespace DementCore.MultiTenantKit.Hosting
                 case ResolutionResult.NotFound:
 
                     //tenant not found
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, ResolutionResult.NotFound);
 
                     break;
 
@@ -135,7 +135,7 @@ namespace DementCore.MultiTenantKit.Hosting
 
                 case ResolutionResult.Error:
 
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.Error);
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantName, ResolutionResult.Error);
 
                     break;
 

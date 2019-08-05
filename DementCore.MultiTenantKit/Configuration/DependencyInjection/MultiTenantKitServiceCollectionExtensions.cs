@@ -10,7 +10,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class MultiTenantKitServiceCollectionExtensions
     {
-
+        /// <summary>
+        /// Adds MultitenantKit service and returns a builder to configure the system.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IMultiTenantKitBuilder AddMultiTenantKit(this IServiceCollection services)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -18,29 +22,34 @@ namespace Microsoft.Extensions.DependencyInjection
             return new MultiTenantKitBuilder(services);
         }
 
+        /// <summary>
+        /// Add MultitenantKit default services with Route Resolver, default Mapper Service and default Info Service
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public static void AddDefaultMultiTenantKit(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             MultiTenantKitBuilder builder = new MultiTenantKitBuilder(services);
 
-            builder.AddInMemoryTenants<Tenant>(configuration.GetSection("Tenants:TenantsData"))
-                .AddInMemoryTenantSlugs<TenantSlugs>(configuration.GetSection("Tenants:TenantsSlugs"))
-                .AddTenantRouteResolverService()
-                .AddDefaultTenantMapperService<TenantSlugs>()
+            builder.AddInMemoryTenantsStore<Tenant>(configuration.GetSection("Tenants:TenantsData"))
+                .AddInMemoryTenantMappingsStore<TenantMapping>(configuration.GetSection("Tenants:TenantMappings"))
+                .AddDefaultTenantRouteResolverService()
+                .AddDefaultTenantMapperService<TenantMapping>()
                 .AddDefaultTenantInfoService<Tenant>();
         }
 
-        public static void AddDefaultMultiTenantKit(this IServiceCollection services, List<Tenant> tenants, List<TenantSlugs> tenantSlugs)
+        public static void AddDefaultMultiTenantKit(this IServiceCollection services, List<Tenant> tenants, List<TenantMapping> tenantMappings)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             MultiTenantKitBuilder builder = new MultiTenantKitBuilder(services);
 
-            builder.AddInMemoryTenants<Tenant>(tenants)
-                .AddInMemoryTenantSlugs<TenantSlugs>(tenantSlugs)
-                .AddTenantRouteResolverService()
-                .AddDefaultTenantMapperService<TenantSlugs>()
+            builder.AddInMemoryTenantsStore(tenants)
+                .AddInMemoryTenantMappingsStore(tenantMappings)
+                .AddDefaultTenantRouteResolverService()
+                .AddDefaultTenantMapperService<TenantMapping>()
                 .AddDefaultTenantInfoService<Tenant>();
 
         }

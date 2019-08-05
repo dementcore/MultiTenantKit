@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 namespace DementCore.MultiTenantKit.Core.Services
 {
     /// <summary>
-    /// Interface de servicio para realizar el mapeo del slug del inquilino al identificador del inquilino
+    /// Interface used to implement services to map between tenant's names and it's ids.
     /// </summary>
     public interface ITenantMapperService
     {
-        Task<string> MapTenantAsync(string slug);
+        Task<string> MapTenantAsync(string tenantName);
     }
 }

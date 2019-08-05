@@ -17,6 +17,14 @@ namespace Microsoft.AspNetCore.Http
             return (TenantContext<TTenant>)httpContext.Items["TenantContext"];
         }
 
+        public static string GetTenantName<TTenant>(this HttpContext httpContext)
+            where TTenant : ITenant
+        {
+            var tCtx = (TenantContext<TTenant>)httpContext.Items["TenantContext"];
+
+            return tCtx?.CurrentTenantName ?? "";
+        }
+
         internal static void SetTenantContext<TTenant>(this HttpContext httpContext, TenantContext<TTenant> tenantContext)
             where TTenant : ITenant
         {

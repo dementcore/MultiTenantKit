@@ -16,25 +16,42 @@ namespace DementCore.MultiTenantKit.Core.Services
         public TenantHostResolverService(IOptionsMonitor<HostResolverOptions> options)
         {
             Options = options.CurrentValue;
+
+            if (Options.ExcludedDomains == null)
+            {
+                Options.ExcludedDomains = new List<string>();
+            }
         }
 
         public Task<TenantResolveResult> ResolveTenantAsync(HttpContext httpContext)
         {
-            string tenantSubdomain = "";
+            string tenantInfo = "";
 
             try
             {
-                object[] partes = httpContext.Request.Host.Host.Unformat(Options.DomainTemplate);
-
-                if (partes.Length <= 0)
+                if (Options.ExcludedDomains.Contains(httpContext.Request.Host.Host))
                 {
+                    //if the request domain is in the exclusion list, the resolution does not apply.
+                    return Task.FromResult(TenantResolveResult.NotApply);
+                }
+
+                object[] parts;
+                if (!httpContext.Request.Host.Host.Unformat(Options.DomainTemplate, out parts))
+                {
+                    //if the request domain not match does not apply
+                    return Task.FromResult(TenantResolveResult.NotApply);
+                }
+
+                if (parts.Length <= 0)
+                {
+                    //if the request
                     return Task.FromResult(TenantResolveResult.NotFound);
                 }
                 else
                 {
-                    tenantSubdomain = string.Join('-', partes);
+                    tenantInfo = string.Concat(parts);
 
-                    return Task.FromResult(new TenantResolveResult(tenantSubdomain, ResolutionType.TenantName));
+                    return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
                 }
             }
             catch (Exception ex)

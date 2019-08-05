@@ -8,16 +8,16 @@ namespace DementCore.MultiTenantKit.Core.Context
     {
         public TTenant Tenant { get; }
 
-        public string CurrentTenantSlug { get; }
+        public string CurrentTenantName { get; }
 
         public ResolutionType ResolutionType { get; }
 
         public ResolutionResult ResolutionResult { get; }
 
-        public TenantContext(TTenant tenant, string currentTenantSlug, ResolutionResult resolutionResult, ResolutionType resolvedType = ResolutionType.Nothing)
+        public TenantContext(TTenant tenant, string currentTenantName, ResolutionResult resolutionResult, ResolutionType resolvedType = ResolutionType.Nothing)
         {
             Tenant = tenant;
-            CurrentTenantSlug = currentTenantSlug;
+            CurrentTenantName = currentTenantName;
             ResolutionResult = resolutionResult;
             ResolutionType = resolvedType;
         }

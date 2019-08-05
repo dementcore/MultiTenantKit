@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantMapperService<TTenantSlug> : ITenantMapperService where TTenantSlug : ITenantSlugs
+    internal class TenantMapperService<TTenantNames> : ITenantMapperService where TTenantNames : ITenantMapping
     {
-        private ITenantSlugsStore<TTenantSlug> SlugsStore { get; }
+        private ITenantMappingStore<TTenantNames> NamesStore { get; }
 
-        public TenantMapperService(ITenantSlugsStore<TTenantSlug> slugsStore)
+        public TenantMapperService(ITenantMappingStore<TTenantNames> namesStore)
         {
-            SlugsStore = slugsStore;
+            NamesStore = namesStore;
         }
 
-        public Task<string> MapTenantAsync(string slug)
+        public Task<string> MapTenantAsync(string tenantName)
         {
-            var tSlug = SlugsStore.GetTenantSlugsBySlug(slug);
+            var tName = NamesStore.GetTenantMappingByName(tenantName);
 
-            if (tSlug != null)
+            if (tName != null)
             {
-                return Task.FromResult(tSlug?.TenantId);
+                return Task.FromResult(tName?.TenantId);
             }
 
             return Task.FromResult("");

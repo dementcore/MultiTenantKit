@@ -1,6 +1,7 @@
 ﻿using DementCore.MultiTenantKit.Configuration.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Template;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -15,27 +16,42 @@ namespace DementCore.MultiTenantKit.Core.Services
         public TenantPathResolverService(IOptionsMonitor<PathResolverOptions> options)
         {
             Options = options.CurrentValue;
+
+            if (Options.ExcludedRouteTemplates == null)
+            {
+                Options.ExcludedRouteTemplates = new List<string>();
+            }
         }
 
         public Task<TenantResolveResult> ResolveTenantAsync(HttpContext httpContext)
         {
-            string tenantSlug = "";
+            string tenantInfo = "";
 
             try
             {
-                if (!ExtractSlugFromRoute(httpContext, out tenantSlug))
+                foreach (string ruta in Options.ExcludedRouteTemplates)
+                {
+                    if (MatchRoute(ruta, httpContext.Request.Path))
+                    {
+                        //if the request route is in the exclusion list, the resolution does not apply.
+                        return Task.FromResult(TenantResolveResult.NotApply);
+                    }
+                }
+
+                if (!ExtractInfoFromRoute(httpContext, out tenantInfo))
                 {
                     //not apply tenant resolution
                     return Task.FromResult(TenantResolveResult.NotApply);
                 }
 
-                if (!string.IsNullOrWhiteSpace(tenantSlug))
+                if (!string.IsNullOrWhiteSpace(tenantInfo))
                 {
-                    return Task.FromResult(new TenantResolveResult(tenantSlug, ResolutionType.TenantName));
+                    //route contains the configured route segment name and the extracted tenant contains something
+                    return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
                 }
                 else
                 {
-                    //slug not found or empty
+                    //route contains the configured route segment name but the extracted tenant is empty or null
                     return Task.FromResult(TenantResolveResult.NotFound);
                 }
             }
@@ -46,13 +62,36 @@ namespace DementCore.MultiTenantKit.Core.Services
 
         }
 
+        public static bool MatchRoute(string routeTemplate, string requestPath)
+        {
+            RouteTemplate template = TemplateParser.Parse(routeTemplate);
+            TemplateMatcher matcher = new TemplateMatcher(template, GetRouteDefaults(template));
+            RouteValueDictionary values = new RouteValueDictionary();
+            return matcher.TryMatch(requestPath, values);
+        }
+
+        private static RouteValueDictionary GetRouteDefaults(RouteTemplate parsedTemplate)
+        {
+            RouteValueDictionary result = new RouteValueDictionary();
+
+            foreach (TemplatePart parameter in parsedTemplate.Parameters)
+            {
+                if (parameter.DefaultValue != null)
+                {
+                    result.Add(parameter.Name, parameter.DefaultValue);
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
-        /// Extracts slug from url
+        /// Extracts name from path
         /// </summary>
         /// <param name="httpContext"></param>
         /// <param name="tenantRouteFragment"></param>
         /// <returns>True if the route contains the Options.RouteSegmentName. False if the route not contains Options.RouteSegmentName</returns>
-        private bool ExtractSlugFromRoute(HttpContext httpContext, out string tenantRouteFragment)
+        private bool ExtractInfoFromRoute(HttpContext httpContext, out string tenantRouteFragment)
         {
             bool returnValue = false;
 

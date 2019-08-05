@@ -1,6 +1,7 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
 using DementCore.MultiTenantKit.Configuration.Options;
 using DementCore.MultiTenantKit.Core.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyMultitenantWebApplication.MultiTenantImplementations;
+using System.Collections.Generic;
 
 namespace MyMultitenantWebApplication
 {
@@ -30,19 +32,34 @@ namespace MyMultitenantWebApplication
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie("Cookies",options=>
+                {
+                    options.LoginPath = "/";
+                });
+
             services.AddMultiTenantKit()
-                .AddInMemoryTenants<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
-                .AddInMemoryTenantSlugs<TenantSlugs>(Configuration.GetSection("Tenants:TenantsSlugs"))
-                  //.AddTenantRouteResolverService(options =>
-                  //{
-                  //    options.RouteSegmentName = "Inquilino";
-                  //})
-                  .AddTenantDomainResolverService(options =>
-                  {
-                      options.DomainTemplate = "{0}.midominio.com";
-                  })
-                .AddDefaultTenantMapperService<TenantSlugs>()
-                .AddDefaultTenantInfoService<MyTenant>();
+                .AddInMemoryTenantsStore<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
+                .AddInMemoryTenantMappingsStore<TenantMapping>(Configuration.GetSection("Tenants:TenantMappings"))
+                .AddDefaultTenantMapperService<TenantMapping>()
+                .AddDefaultTenantInfoService<MyTenant>()
+                .AddDefaultTenantClaimResolverService(options =>
+                {
+                    options.ClaimName = "Inquilino";
+                    options.OnlyAuthenticated = false;
+                    options.ResolutionType = DementCore.MultiTenantKit.Core.ResolutionType.TenantName;
+                })
+                //.AddDefaultTenantRouteResolverService(options =>
+                //{
+                //    options.ExcludedRouteTemplates = new List<string> { "/" };
+                //    options.RouteSegmentName = "Inquilino";
+                //})
+                //.AddDefaultTenantDomainResolverService(options =>
+                //{
+                //    options.ExcludedDomains = new List<string> { "admin.midominio.com" };
+                //    options.DomainTemplate = "{0}.midominio.com";
+                //})
+                ;
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -61,6 +78,7 @@ namespace MyMultitenantWebApplication
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMultiTenantKit<MyTenant>();
 

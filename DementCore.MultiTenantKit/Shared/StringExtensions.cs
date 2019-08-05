@@ -52,8 +52,10 @@ namespace DementCore.MultiTenantKit.Shared
 
         #endregion
 
-        internal static object[] Unformat(this String input, string formatString)
+        internal static bool Unformat(this String input, string formatString, out object[] output)
         {
+            bool returnValue = false;
+
             // Escape special regular expression characters with a backslash
             string interim = EscapeRegEx.Replace(formatString, @"\$1");
 
@@ -66,12 +68,17 @@ namespace DementCore.MultiTenantKit.Shared
 
             // perform the match
             Regex regex = new Regex(interim);
-            
+
+            returnValue = regex.IsMatch(input);
+
             Match match = regex.Match(input);
 
+
             // loop from zero until we don't get a matched capture group
-            List<object> output = new List<object>();
+            List<object> outputList = new List<object>();
+
             int loop = 0;
+
             while (true)
             {
                 // build a capture group name and check for it
@@ -83,10 +90,12 @@ namespace DementCore.MultiTenantKit.Shared
                     break;
 
                 // add it to the output list
-                output.Add(capture.Value);
+                outputList.Add(capture.Value);
             }
 
-            return output.ToArray();
+            output = outputList.ToArray();
+
+            return returnValue;
         }
     }
 }

@@ -18,7 +18,8 @@ namespace MyMultitenantWebApplication.Controllers
 
             TenantContext<MyTenant> tenantCtx = HttpContext.GetTenantContext<MyTenant>();
 
-            model.TenantName = tenantCtx.Tenant.Name;
+            
+            model.TenantName = tenantCtx.Tenant?.Name ?? "";
 
             return View(model);
         }

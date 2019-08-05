@@ -4,11 +4,11 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Configuration.Options
 {
-    public class PathResolverOptions
+    public class HostResolverOptions
     {
         /// <summary>
-        /// Determines the name of the segment to search in the path and extract the tenant's Slug
+        /// Determines the domain template used to search and extract the tenant's Slug
         /// </summary>
-        public string RouteSegmentName { get; set; }
+        public string DomainTemplate { get; set; }
     }
 }

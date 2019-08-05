@@ -6,13 +6,17 @@ namespace DementCore.MultiTenantKit.Core
 {
     public class TenantResolveResult
     {
+        #region Constructors
+
         /// <summary>
-        /// Create a TenantResolveResult that indicates that the tenant's resolution does not apply in this request.
+        /// Create a TenantResolveResult that indicates that the tenant's resolution result of this request.
         /// </summary>
-        public TenantResolveResult()
+        /// <param name="resolutionResult"></param>
+        public TenantResolveResult(ResolutionResult resolutionResult)
         {
             Value = "";
-            ResolvedType = ResolvedType.NotApply;
+            ResolutionType = ResolutionType.Nothing;
+            ResolutionResult = resolutionResult;
             ErrorMessage = "";
         }
 
@@ -21,18 +25,20 @@ namespace DementCore.MultiTenantKit.Core
         /// </summary>
         /// <param name="value"></param>
         /// <param name="resolvedType"></param>
-        public TenantResolveResult(string value, ResolvedType resolvedType = ResolvedType.TenantSlug)
+        public TenantResolveResult(string value, ResolutionType resolvedType = ResolutionType.TenantName)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 Value = value;
-                ResolvedType = ResolvedType.NotApply;
+                ResolutionResult = ResolutionResult.NotApply;
+                ResolutionType = ResolutionType.Nothing;
                 ErrorMessage = "";
             }
             else
             {
                 Value = value;
-                ResolvedType = resolvedType;
+                ResolutionResult = ResolutionResult.Success;
+                ResolutionType = resolvedType;
                 ErrorMessage = "";
             }
         }
@@ -49,7 +55,8 @@ namespace DementCore.MultiTenantKit.Core
             }
 
             Value = "";
-            ResolvedType = ResolvedType.Error;
+            ResolutionResult = ResolutionResult.Error;
+            ResolutionType = ResolutionType.Nothing;
             ErrorMessage = exception?.Message ?? "";
         }
 
@@ -65,24 +72,37 @@ namespace DementCore.MultiTenantKit.Core
             }
 
             Value = "";
-            ResolvedType = ResolvedType.Error;
+            ResolutionResult = ResolutionResult.Error;
+            ResolutionType = ResolutionType.Nothing;
             ErrorMessage = errorMessage;
         }
+
+        #endregion
+
+        #region Public Static Properties
+
+        /// <summary>
+        /// Indicates that the tenant's resolution does not apply in this request.
+        /// </summary>
+        public static TenantResolveResult NotApply { get; } = new TenantResolveResult(ResolutionResult.NotApply);
+
+        /// <summary>
+        /// Indicates that the tenant's is not found.
+        /// </summary>
+        public static TenantResolveResult NotFound { get; } = new TenantResolveResult(ResolutionResult.NotFound);
+
+        #endregion
+
+        #region Public Properties
 
         public string Value { get; }
 
         public string ErrorMessage { get; }
 
-        public ResolvedType ResolvedType { get; }
+        public ResolutionResult ResolutionResult { get; }
 
-        /// <summary>
-        /// Indicates that the tenant's resolution does not apply in this request.
-        /// </summary>
-        public static TenantResolveResult NotApply { get; } = new TenantResolveResult();
+        public ResolutionType ResolutionType { get; }
 
-        /// <summary>
-        /// Indicates that the tenant's is not found.
-        /// </summary>
-        public static TenantResolveResult NotFound { get; } = new TenantResolveResult("", ResolvedType.NotFound);
+        #endregion
     }
 }

@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.AddInMemoryTenants<Tenant>(configuration.GetSection("Tenants:TenantsData"))
                 .AddInMemoryTenantSlugs<TenantSlugs>(configuration.GetSection("Tenants:TenantsSlugs"))
-                .AddTenantPathResolverService()
+                .AddTenantRouteResolverService()
                 .AddDefaultTenantMapperService<TenantSlugs>()
                 .AddDefaultTenantInfoService<Tenant>();
         }
@@ -39,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.AddInMemoryTenants<Tenant>(tenants)
                 .AddInMemoryTenantSlugs<TenantSlugs>(tenantSlugs)
-                .AddTenantPathResolverService()
+                .AddTenantRouteResolverService()
                 .AddDefaultTenantMapperService<TenantSlugs>()
                 .AddDefaultTenantInfoService<Tenant>();
 

@@ -31,7 +31,7 @@ namespace DementCore.MultiTenantKit.Core.Services
 
                 if (!string.IsNullOrWhiteSpace(tenantSlug))
                 {
-                    return Task.FromResult(new TenantResolveResult(tenantSlug, ResolvedType.TenantSlug));
+                    return Task.FromResult(new TenantResolveResult(tenantSlug, ResolutionType.TenantName));
                 }
                 else
                 {

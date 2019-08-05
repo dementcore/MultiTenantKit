@@ -31,87 +31,118 @@ namespace DementCore.MultiTenantKit.Hosting
 
             _tenantResolveResult = await tenantResolverService.ResolveTenantAsync(httpContext);
 
-            switch (_tenantResolveResult.ResolvedType)
+            switch (_tenantResolveResult.ResolutionResult)
             {
-                case ResolvedType.TenantId:
+                #region ResolutionResult.Success
 
-                    #region TenantIdResolution
+                case ResolutionResult.Success:
 
-                    _tenantId = _tenantResolveResult.Value;
-
-                    //call the info service directly with resolved TenantId
-                    if (!string.IsNullOrWhiteSpace(_tenantId))
+                    switch (_tenantResolveResult.ResolutionType)
                     {
-                        _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantId);
-                    }
+                        #region ResolutionType.TenantId
 
-                    if (_tenant == null)
-                    {
-                        _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.NotFound);
-                    }
-                    else
-                    {
-                        _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.TenantId);
-                    }
+                        case ResolutionType.TenantId:
 
-                    #endregion
+                            _tenantId = _tenantResolveResult.Value;
+
+                            //call the info service directly with resolved TenantId
+                            if (!string.IsNullOrWhiteSpace(_tenantId))
+                            {
+                                _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantId);
+                            }
+
+                            if (_tenant == default)
+                            {
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
+                            }
+                            else
+                            {
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
+                            }
+
+                            break;
+
+                        #endregion
+
+                        #region ResolutionType.TenantSlug
+
+                        case ResolutionType.TenantName:
+
+
+                            //only call the mapper service if the resolution is of type tenantSlug
+                            if (!string.IsNullOrWhiteSpace(_tenantResolveResult.Value))
+                            {
+                                _tenantId = await tenantMapperService.MapTenantAsync(_tenantResolveResult.Value);
+
+                                _tenantSlug = _tenantResolveResult.Value;
+                            }
+
+                            //call the info service after mapping the tenant slug
+                            if (!string.IsNullOrWhiteSpace(_tenantId))
+                            {
+                                _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantId);
+                            }
+
+                            if (_tenant == default)
+                            {
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
+                            }
+                            else
+                            {
+                                _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, _tenantResolveResult.ResolutionResult, _tenantResolveResult.ResolutionType);
+                            }
+
+                            break;
+
+                        #endregion
+
+                        #region ResolutionType.Nothing
+
+                        case ResolutionType.Nothing:
+
+                            break;
+
+                        #endregion
+                    }
 
                     break;
 
-                case ResolvedType.TenantSlug:
+                #endregion
 
-                    #region TenantSlugResolution
+                #region ResolutionResult.NotApply
 
-                    //only call the mapper service if the resolution is of type tenantSlug
-                    if (!string.IsNullOrWhiteSpace(_tenantResolveResult.Value))
-                    {
-                        _tenantId = await tenantMapperService.MapTenantAsync(_tenantResolveResult.Value);
-
-                        _tenantSlug = _tenantResolveResult.Value;
-                    }
-
-                    //call the info service after mapping the tenant slug
-                    if (!string.IsNullOrWhiteSpace(_tenantId))
-                    {
-                        _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantId);
-                    }
-
-                    if (_tenant == null)
-                    {
-                        _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.NotFound);
-                    }
-                    else
-                    {
-                        _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.TenantSlug);
-                    }
-
-                    #endregion
-
-                    break;
-
-                case ResolvedType.NotApply:
+                case ResolutionResult.NotApply:
 
                     //do nothing because the resolution does not apply in this request
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.NotApply);
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotApply);
 
                     break;
 
-                case ResolvedType.NotFound:
+                #endregion
+
+                #region ResolutionResult.NotFound
+
+                case ResolutionResult.NotFound:
 
                     //tenant not found
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.NotFound);
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.NotFound);
 
                     break;
 
-                case ResolvedType.Error:
+                #endregion
 
-                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolvedType.Error);
+                #region ResolutionResult.Error
+
+                case ResolutionResult.Error:
+
+                    _tenantContext = new TenantContext<TTenant>(_tenant, _tenantSlug, ResolutionResult.Error);
 
                     break;
+
+                    #endregion
             }
 
             httpContext.SetTenantContext(_tenantContext);
-
 
             await _next(httpContext);
         }

@@ -16,16 +16,16 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
         #region PathResolver
 
-        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder)
+        public static IMultiTenantKitBuilder AddTenantRouteResolverService(this IMultiTenantKitBuilder builder)
         {
-            builder.AddTenantPathResolverService("tenant");
+            builder.AddTenantRouteResolverService("tenant");
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder, string routeSegmentName)
+        public static IMultiTenantKitBuilder AddTenantRouteResolverService(this IMultiTenantKitBuilder builder, string routeSegmentName)
         {
-            builder.AddTenantPathResolverService(options =>
+            builder.AddTenantRouteResolverService(options =>
             {
                 options.RouteSegmentName = routeSegmentName;
             });
@@ -33,7 +33,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddTenantPathResolverService(this IMultiTenantKitBuilder builder, Action<PathResolverOptions> configureOptions)
+        public static IMultiTenantKitBuilder AddTenantRouteResolverService(this IMultiTenantKitBuilder builder, Action<PathResolverOptions> configureOptions)
         {
 
             if (!builder.Services.Any(x => x.ServiceType == typeof(IConfigureOptions<PathResolverOptions>)))
@@ -49,6 +49,36 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
         #endregion
 
         #region DomainResolver
+
+        public static IMultiTenantKitBuilder AddTenantDomainResolverService(this IMultiTenantKitBuilder builder)
+        {
+            builder.AddTenantRouteResolverService("{0}.midomain.com");
+
+            return builder;
+        }
+
+        public static IMultiTenantKitBuilder AddTenantDomainResolverService(this IMultiTenantKitBuilder builder, string domainTemplate)
+        {
+            builder.AddTenantDomainResolverService(options =>
+            {
+                options.DomainTemplate = domainTemplate;
+            });
+
+            return builder;
+        }
+
+        public static IMultiTenantKitBuilder AddTenantDomainResolverService(this IMultiTenantKitBuilder builder, Action<HostResolverOptions> configureOptions)
+        {
+
+            if (!builder.Services.Any(x => x.ServiceType == typeof(IConfigureOptions<HostResolverOptions>)))
+            {
+                builder.Services.Configure(configureOptions);
+            }
+
+            builder.Services.TryAddTransient<ITenantResolverService, TenantHostResolverService>();
+
+            return builder;
+        }
 
         #endregion
 

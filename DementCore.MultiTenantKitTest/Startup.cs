@@ -33,10 +33,14 @@ namespace MyMultitenantWebApplication
             services.AddMultiTenantKit()
                 .AddInMemoryTenants<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
                 .AddInMemoryTenantSlugs<TenantSlugs>(Configuration.GetSection("Tenants:TenantsSlugs"))
-                .AddTenantPathResolverService(options =>
-                {
-                    options.RouteSegmentName = "Inquilino";
-                })
+                  //.AddTenantRouteResolverService(options =>
+                  //{
+                  //    options.RouteSegmentName = "Inquilino";
+                  //})
+                  .AddTenantDomainResolverService(options =>
+                  {
+                      options.DomainTemplate = "{0}.midominio.com";
+                  })
                 .AddDefaultTenantMapperService<TenantSlugs>()
                 .AddDefaultTenantInfoService<MyTenant>();
 

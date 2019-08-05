@@ -66,6 +66,7 @@ namespace DementCore.MultiTenantKit.Shared
 
             // perform the match
             Regex regex = new Regex(interim);
+            
             Match match = regex.Match(input);
 
             // loop from zero until we don't get a matched capture group

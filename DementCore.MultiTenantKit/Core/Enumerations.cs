@@ -4,12 +4,18 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Core
 {
-    public enum ResolvedType
+    public enum ResolutionType
     {
+        Nothing,
+        TenantId,
+        TenantName
+    }
+
+    public enum ResolutionResult
+    {
+        Success,
         NotApply,
         NotFound,
-        TenantSlug,
-        TenantId,
         Error
     }
 }

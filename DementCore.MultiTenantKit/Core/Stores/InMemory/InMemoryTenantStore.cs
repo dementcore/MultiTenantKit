@@ -1,17 +1,13 @@
 ﻿using DementCore.MultiTenantKit.Core.Attributes;
 using DementCore.MultiTenantKit.Core.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Stores.Default
 {
     public class InMemoryTenantStore<TTenant> : ITenantStore<TTenant> where TTenant : ITenant
     {
-        List<TTenant> Tenants { get; }
+        private List<TTenant> Tenants { get; }
 
         public InMemoryTenantStore(List<TTenant> tenants)
         {

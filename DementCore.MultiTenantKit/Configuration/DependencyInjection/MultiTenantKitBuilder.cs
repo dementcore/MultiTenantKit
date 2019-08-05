@@ -8,10 +8,23 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection
 {
     public class MultiTenantKitBuilder : IMultiTenantKitBuilder
     {
-        public MultiTenantKitBuilder(IServiceCollection services)
+        public MultiTenantKitBuilder(IServiceCollection services, Type tenantType, Type tenantMappingType)
         {
             Services = services;
+            TenantType = tenantType;
+            TenantMappingType = tenantMappingType;
         }
+
+        public MultiTenantKitBuilder(IServiceCollection services, Type tenantType)
+        {
+            Services = services;
+            TenantType = tenantType;
+            TenantMappingType = typeof(TenantMapping);
+        }
+
+        public Type TenantType { get; }
+
+        public Type TenantMappingType { get; }
 
         public IServiceCollection Services { get; }
 

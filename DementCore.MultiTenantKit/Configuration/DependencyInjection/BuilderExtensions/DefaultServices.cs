@@ -116,26 +116,33 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
         #endregion
 
-        public static IMultiTenantKitBuilder AddDefaultTenantMapperService<TTenantMapping>(this IMultiTenantKitBuilder builder)
-            where TTenantMapping : ITenantMapping
+        public static IMultiTenantKitBuilder AddDefaultTenantMapperService(this IMultiTenantKitBuilder builder)
         {
-            builder.Services.TryAddTransient<ITenantMapperService, TenantMapperService<TTenantMapping>>();
+            Type ITenantMapperType = typeof(ITenantMapperService);
+            Type STenantMapperType = typeof(TenantMapperService<>).MakeGenericType(builder.TenantMappingType);
+
+            builder.Services.TryAddTransient(ITenantMapperType, STenantMapperType);
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantInfoService<TTenant>(this IMultiTenantKitBuilder builder)
-            where TTenant : ITenant
+        public static IMultiTenantKitBuilder AddDefaultTenantInfoService(this IMultiTenantKitBuilder builder)
         {
-            builder.Services.TryAddTransient<ITenantInfoService<TTenant>, TenantInfoService<TTenant>>();
+
+            Type ITenantInfoType = typeof(ITenantInfoService<>).MakeGenericType(builder.TenantType);
+            Type STenantInfoType = typeof(TenantInfoService<>).MakeGenericType(builder.TenantType);
+
+            builder.Services.TryAddTransient(ITenantInfoType, STenantInfoType);
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantProviderService<TTenant>(this IMultiTenantKitBuilder builder)
-            where TTenant : ITenant
+        public static IMultiTenantKitBuilder AddDefaultTenantProviderService(this IMultiTenantKitBuilder builder)
         {
-            builder.Services.TryAddScoped<ITenantProvider<TTenant>, TenantProviderService<TTenant>>();
+            Type ITenantProviderType = typeof(ITenantProvider<>).MakeGenericType(builder.TenantType);
+            Type STenantProviderType = typeof(TenantProviderService<>).MakeGenericType(builder.TenantType);
+
+            builder.Services.TryAddScoped(ITenantProviderType, STenantProviderType);
 
             return builder;
         }

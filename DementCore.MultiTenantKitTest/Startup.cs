@@ -1,6 +1,7 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
 using DementCore.MultiTenantKit.Configuration.Options;
 using DementCore.MultiTenantKit.Core.Models;
+using DementCore.MultiTenantKit.Core.Stores.Default;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyMultitenantWebApplication.Models;
 using MyMultitenantWebApplication.MultiTenantImplementations;
 using System.Collections.Generic;
 
@@ -33,16 +35,16 @@ namespace MyMultitenantWebApplication
             });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie("Cookies",options=>
-                {
-                    options.LoginPath = "/";
-                });
+                .AddCookie("Cookies", options =>
+                 {
+                     options.LoginPath = "/";
+                 });
 
-            services.AddMultiTenantKit()
-                .AddInMemoryTenantsStore<MyTenant>(Configuration.GetSection("Tenants:TenantsData"))
-                .AddInMemoryTenantMappingsStore<TenantMapping>(Configuration.GetSection("Tenants:TenantMappings"))
-                .AddDefaultTenantMapperService<TenantMapping>()
-                .AddDefaultTenantInfoService<MyTenant>()
+            services.AddMultiTenantKit<MyTenant>()
+                .AddInMemoryTenantsStore(Configuration.GetSection("Tenants:TenantsData"))
+                .AddInMemoryTenantMappingsStore(Configuration.GetSection("Tenants:TenantMappings"))
+                .AddDefaultTenantMapperService()
+                .AddDefaultTenantInfoService()
                 .AddDefaultTenantClaimResolverService(options =>
                 {
                     options.ClaimName = "Inquilino";

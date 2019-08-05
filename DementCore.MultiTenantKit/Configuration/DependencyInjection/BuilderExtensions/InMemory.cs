@@ -11,47 +11,53 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class InMemory
     {
-        public static IMultiTenantKitBuilder AddInMemoryTenantsStore<TTenant>(this IMultiTenantKitBuilder builder, List<TTenant> tenants)
-         where TTenant : ITenant
+        public static IMultiTenantKitBuilder AddInMemoryTenantsStore(this IMultiTenantKitBuilder builder, IEnumerable<ITenant> tenants)
         {
-            builder.Services.AddScoped<ITenantStore<TTenant>, InMemoryTenantStore<TTenant>>(x =>
+            Type ITenantStoreType = typeof(ITenantStore<>).MakeGenericType(builder.TenantType);
+            Type STenantStoreType = typeof(InMemoryTenantStore<>).MakeGenericType(builder.TenantType);
+
+            builder.Services.AddScoped(ITenantStoreType, s =>
             {
-                return new InMemoryTenantStore<TTenant>(tenants);
+                return Activator.CreateInstance(STenantStoreType, tenants);
             });
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddInMemoryTenantsStore<TTenant>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
-            where TTenant : ITenant
+        public static IMultiTenantKitBuilder AddInMemoryTenantsStore(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
         {
-            List<TTenant> tenants = new List<TTenant>();
+            Type tenantListType = typeof(List<>).MakeGenericType(builder.TenantType);
+
+            object tenants = Activator.CreateInstance(tenantListType);
 
             configurationSection.Bind(tenants);
 
-            return builder.AddInMemoryTenantsStore(tenants);
+            return builder.AddInMemoryTenantsStore((IEnumerable<ITenant>)tenants);
         }
 
 
-        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore<TTenantMapping>(this IMultiTenantKitBuilder builder, List<TTenantMapping> tenantMappings)
-            where TTenantMapping : ITenantMapping
+        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore(this IMultiTenantKitBuilder builder, IEnumerable<ITenantMapping> tenantMappings)
         {
-            builder.Services.AddScoped<ITenantMappingStore<TTenantMapping>, InMemoryTenantMappingStore<TTenantMapping>>(x =>
+            Type ITenantMappingStoreType = typeof(ITenantMappingStore<>).MakeGenericType(builder.TenantMappingType);
+            Type STenantMappingsStoreType = typeof(InMemoryTenantMappingStore<>).MakeGenericType(builder.TenantMappingType);
+
+            builder.Services.AddScoped(ITenantMappingStoreType, s =>
             {
-                return new InMemoryTenantMappingStore<TTenantMapping>(tenantMappings);
+                return Activator.CreateInstance(STenantMappingsStoreType, tenantMappings);
             });
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore<TTenantMapping>(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
-             where TTenantMapping : ITenantMapping
+        public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore(this IMultiTenantKitBuilder builder, IConfigurationSection configurationSection)
         {
-            List<TTenantMapping> tenantMappings = new List<TTenantMapping>();
+            Type tenantMappingListType = typeof(List<>).MakeGenericType(builder.TenantMappingType);
+
+            object tenantMappings = Activator.CreateInstance(tenantMappingListType);
 
             configurationSection.Bind(tenantMappings);
 
-            return builder.AddInMemoryTenantMappingsStore(tenantMappings);
+            return builder.AddInMemoryTenantMappingsStore((IEnumerable<ITenantMapping>)tenantMappings);
         }
     }
 }

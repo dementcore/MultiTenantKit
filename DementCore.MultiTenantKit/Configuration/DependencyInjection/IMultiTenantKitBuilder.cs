@@ -9,9 +9,19 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection
     public interface IMultiTenantKitBuilder
     {
         /// <summary>
-        /// Servicios del sistema
+        /// Service Collection
         /// </summary>
         IServiceCollection Services { get; }
+
+        /// <summary>
+        /// Type representing Tenant's Entity
+        /// </summary>
+        Type TenantType { get; }
+
+        /// <summary>
+        /// Type representing Tenant Mappings Entity
+        /// </summary>
+        Type TenantMappingType { get; }
 
     }
 }

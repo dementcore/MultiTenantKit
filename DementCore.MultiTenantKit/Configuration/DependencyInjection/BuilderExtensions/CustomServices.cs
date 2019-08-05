@@ -19,6 +19,12 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             where TTenant : ITenant
             where TInfoService : class, ITenantInfoService<TTenant>
         {
+
+            if (typeof(TTenant) != builder.TenantType)
+            {
+                throw new InvalidOperationException($"You must use the same Tenant's Entity Type {builder.TenantType.ToString()} that you have indicated in kit initialization!");
+            }
+
             builder.Services.AddTransient<ITenantInfoService<TTenant>, TInfoService>();
 
             return builder;
@@ -27,6 +33,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
         public static IMultiTenantKitBuilder AddCustomTenantMapperService<TMapperService>(this IMultiTenantKitBuilder builder)
             where TMapperService : class, ITenantMapperService
         {
+
             builder.Services.AddTransient<ITenantMapperService, TMapperService>();
 
             return builder;

@@ -6,7 +6,10 @@ namespace DementCore.MultiTenantKit.Core
 {
     public enum ResolvedType
     {
+        NotApply,
+        NotFound,
         TenantSlug,
-        TenantId
+        TenantId,
+        Error
     }
 }

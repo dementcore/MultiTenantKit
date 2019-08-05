@@ -1,15 +1,17 @@
 ﻿using DementCore.MultiTenantKit.Core.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using MyMultitenantWebApplication.Models;
 using MyMultitenantWebApplication.MultiTenantImplementations;
 using System.Diagnostics;
 
 namespace MyMultitenantWebApplication.Controllers
 {
+    [Route("{Inquilino}")]
     public class HomeController : Controller
     {
-        [Route("{Inquilino}/Dashboard")]
+        [Route("Dashboard")]
         public IActionResult Index()
         {
             IndexModel model = new IndexModel();
@@ -21,7 +23,7 @@ namespace MyMultitenantWebApplication.Controllers
             return View(model);
         }
 
-        [Route("{Inquilino}/Privacy")]
+        [Route("Privacy")]
         public IActionResult Privacy()
         {
             return View();

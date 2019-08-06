@@ -6,25 +6,32 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantMapperService<TTenantNames> : ITenantMapperService where TTenantNames : ITenantMapping
+    internal class TenantMapperService<TTenantMappings> : ITenantMapperService<TTenantMappings> 
+        where TTenantMappings : ITenantMapping
     {
-        private ITenantMappingStore<TTenantNames> NamesStore { get; }
+        private ITenantMappingStore<TTenantMappings> NamesStore { get; }
 
-        public TenantMapperService(ITenantMappingStore<TTenantNames> namesStore)
+        public TenantMapperService(ITenantMappingStore<TTenantMappings> namesStore)
         {
             NamesStore = namesStore;
         }
 
-        public Task<string> MapTenantAsync(string tenantName)
+        public Task<TenantMapResult<TTenantMappings>> MapTenantAsync(string tenantName)
         {
-            var tName = NamesStore.GetTenantMappingByName(tenantName);
+            TenantMapResult<TTenantMappings> mapResult;
 
-            if (tName != null)
+            var tMap = NamesStore.GetTenantMappingByName(tenantName);
+
+            if (tMap == null)
             {
-                return Task.FromResult(tName?.TenantId);
+                mapResult = TenantMapResult<TTenantMappings>.NotFound;
+            }
+            else
+            {
+                mapResult = new TenantMapResult<TTenantMappings>(tMap);
             }
 
-            return Task.FromResult("");
+            return Task.FromResult(mapResult);
         }
     }
 }

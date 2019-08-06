@@ -25,11 +25,11 @@ namespace MyMultitenantWebApplication.Controllers
             claimsPrincipal.AddIdentity(claimsIdentity);
 
             HttpContext.SignInAsync("Cookies", claimsPrincipal);
-            
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", new { Inquilino = "tenant2" });
         }
 
-        [Route("/Dashboard")]
+        [Route("{Inquilino}/Dashboard")]
         [Authorize]
         public IActionResult Index()
         {
@@ -42,7 +42,7 @@ namespace MyMultitenantWebApplication.Controllers
             return View(model);
         }
 
-        [Route("/Privacy")]
+        [Route("{Inquilino}/Privacy")]
         [Authorize]
         public IActionResult Privacy()
         {

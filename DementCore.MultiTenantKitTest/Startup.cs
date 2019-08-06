@@ -45,17 +45,17 @@ namespace MyMultitenantWebApplication
                 .AddInMemoryTenantMappingsStore(Configuration.GetSection("Tenants:TenantMappings"))
                 .AddDefaultTenantMapperService()
                 .AddDefaultTenantInfoService()
-                .AddDefaultTenantClaimResolverService(options =>
-                {
-                    options.ClaimName = "Inquilino";
-                    options.OnlyAuthenticated = false;
-                    options.ResolutionType = DementCore.MultiTenantKit.Core.ResolutionType.TenantName;
-                })
-                //.AddDefaultTenantRouteResolverService(options =>
+                //.AddDefaultClaimResolverService(options =>
                 //{
-                //    options.ExcludedRouteTemplates = new List<string> { "/" };
-                //    options.RouteSegmentName = "Inquilino";
+                //    options.ClaimName = "Inquilino";
+                //    options.OnlyAuthenticated = false;
+                //    options.ResolutionType = DementCore.MultiTenantKit.Core.Enumerations.ResolutionType.TenantName;
                 //})
+                .AddDefaultRouteResolverService(options =>
+                {
+                    options.ExcludedRouteTemplates = new List<string> { "/" };
+                    options.RouteSegmentName = "Inquilino";
+                })
                 //.AddDefaultTenantDomainResolverService(options =>
                 //{
                 //    options.ExcludedDomains = new List<string> { "admin.midominio.com" };
@@ -82,7 +82,7 @@ namespace MyMultitenantWebApplication
             app.UseCookiePolicy();
             app.UseAuthentication();
 
-            app.UseMultiTenantKit<MyTenant>();
+            app.UseMultiTenantKit();
 
             app.UseMvc(routes =>
             {

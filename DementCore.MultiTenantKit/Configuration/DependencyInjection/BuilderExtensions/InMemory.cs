@@ -11,6 +11,8 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class InMemory
     {
+        #region TenantsStore
+
         public static IMultiTenantKitBuilder AddInMemoryTenantsStore(this IMultiTenantKitBuilder builder, IEnumerable<ITenant> tenants)
         {
             Type ITenantStoreType = typeof(ITenantStore<>).MakeGenericType(builder.TenantType);
@@ -35,6 +37,9 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder.AddInMemoryTenantsStore((IEnumerable<ITenant>)tenants);
         }
 
+        #endregion
+
+        #region TenantMappingsStore
 
         public static IMultiTenantKitBuilder AddInMemoryTenantMappingsStore(this IMultiTenantKitBuilder builder, IEnumerable<ITenantMapping> tenantMappings)
         {
@@ -59,5 +64,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
             return builder.AddInMemoryTenantMappingsStore((IEnumerable<ITenantMapping>)tenantMappings);
         }
+
+        #endregion
     }
 }

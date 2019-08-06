@@ -2,6 +2,7 @@
 using DementCore.MultiTenantKit.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Reflection;
 
 namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions
 {
@@ -15,26 +16,35 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddCustomTenantInfoService<TTenant, TInfoService>(this IMultiTenantKitBuilder builder)
-            where TTenant : ITenant
-            where TInfoService : class, ITenantInfoService<TTenant>
+        public static IMultiTenantKitBuilder AddCustomTenantInfoService<TInfoService>(this IMultiTenantKitBuilder builder)
+            where TInfoService : class
         {
 
-            if (typeof(TTenant) != builder.TenantType)
+            Type ITenantInfoServiceType = typeof(ITenantInfoService<>).MakeGenericType(builder.TenantType);
+            Type STenantInfoServiceType = typeof(TInfoService);
+
+            if (!ITenantInfoServiceType.GetTypeInfo().IsAssignableFrom(STenantInfoServiceType.GetTypeInfo()))
             {
-                throw new InvalidOperationException($"You must use the same Tenant's Entity Type {builder.TenantType.ToString()} that you have indicated in kit initialization!");
+                throw new InvalidOperationException($"You must use a type that implements {ITenantInfoServiceType.ToString()}!");
             }
 
-            builder.Services.AddTransient<ITenantInfoService<TTenant>, TInfoService>();
+            builder.Services.AddTransient(ITenantInfoServiceType, STenantInfoServiceType);
 
             return builder;
         }
 
         public static IMultiTenantKitBuilder AddCustomTenantMapperService<TMapperService>(this IMultiTenantKitBuilder builder)
-            where TMapperService : class, ITenantMapperService
+            where TMapperService : class
         {
+            Type ITenantMapperServiceType = typeof(ITenantMapperService<>).MakeGenericType(builder.TenantMappingType);
+            Type STenantMapperServiceType = typeof(TMapperService);
 
-            builder.Services.AddTransient<ITenantMapperService, TMapperService>();
+            if (!ITenantMapperServiceType.GetTypeInfo().IsAssignableFrom(STenantMapperServiceType.GetTypeInfo()))
+            {
+                throw new InvalidOperationException($"You must use a type that implements {ITenantMapperServiceType.ToString()}!");
+            }
+
+            builder.Services.AddTransient(ITenantMapperServiceType, STenantMapperServiceType);
 
             return builder;
         }

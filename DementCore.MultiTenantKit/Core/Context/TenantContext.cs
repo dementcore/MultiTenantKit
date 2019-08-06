@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DementCore.MultiTenantKit.Core.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,17 +9,17 @@ namespace DementCore.MultiTenantKit.Core.Context
     {
         public TTenant Tenant { get; }
 
-        public string CurrentTenantName { get; }
-
         public ResolutionType ResolutionType { get; }
 
         public ResolutionResult ResolutionResult { get; }
 
-        public TenantContext(TTenant tenant, string currentTenantName, ResolutionResult resolutionResult, ResolutionType resolvedType = ResolutionType.Nothing)
+        public MappingResult MappingResult { get; }
+
+        public TenantContext(TTenant tenant, ResolutionResult resolutionResult, MappingResult mappingResult, ResolutionType resolvedType)
         {
             Tenant = tenant;
-            CurrentTenantName = currentTenantName;
             ResolutionResult = resolutionResult;
+            MappingResult = mappingResult;
             ResolutionType = resolvedType;
         }
     }

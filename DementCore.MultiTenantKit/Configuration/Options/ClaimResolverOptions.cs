@@ -1,7 +1,4 @@
-﻿using DementCore.MultiTenantKit.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using DementCore.MultiTenantKit.Core.Enumerations;
 
 namespace DementCore.MultiTenantKit.Configuration.Options
 {

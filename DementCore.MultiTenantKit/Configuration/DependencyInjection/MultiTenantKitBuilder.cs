@@ -15,13 +15,6 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection
             TenantMappingType = tenantMappingType;
         }
 
-        public MultiTenantKitBuilder(IServiceCollection services, Type tenantType)
-        {
-            Services = services;
-            TenantType = tenantType;
-            TenantMappingType = typeof(TenantMapping);
-        }
-
         public Type TenantType { get; }
 
         public Type TenantMappingType { get; }

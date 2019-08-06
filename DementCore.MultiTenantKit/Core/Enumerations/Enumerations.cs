@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DementCore.MultiTenantKit.Core
+namespace DementCore.MultiTenantKit.Core.Enumerations
 {
     public enum ResolutionType
     {
@@ -12,6 +12,14 @@ namespace DementCore.MultiTenantKit.Core
     }
 
     public enum ResolutionResult
+    {
+        Success,
+        NotApply,
+        NotFound,
+        Error
+    }
+
+    public enum MappingResult
     {
         Success,
         NotApply,

@@ -13,19 +13,22 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 {
     public static class DefaultServices
     {
+        #region Default Services
+
+        #region Resolvers
 
         #region PathResolver
 
-        public static IMultiTenantKitBuilder AddDefaultTenantRouteResolverService(this IMultiTenantKitBuilder builder)
+        public static IMultiTenantKitBuilder AddDefaultRouteResolverService(this IMultiTenantKitBuilder builder)
         {
-            builder.AddDefaultTenantRouteResolverService("tenant");
+            builder.AddDefaultRouteResolverService("tenant");
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantRouteResolverService(this IMultiTenantKitBuilder builder, string routeSegmentName)
+        public static IMultiTenantKitBuilder AddDefaultRouteResolverService(this IMultiTenantKitBuilder builder, string routeSegmentName)
         {
-            builder.AddDefaultTenantRouteResolverService(options =>
+            builder.AddDefaultRouteResolverService(options =>
             {
                 options.RouteSegmentName = routeSegmentName;
             });
@@ -33,7 +36,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantRouteResolverService(this IMultiTenantKitBuilder builder, Action<PathResolverOptions> configureOptions)
+        public static IMultiTenantKitBuilder AddDefaultRouteResolverService(this IMultiTenantKitBuilder builder, Action<PathResolverOptions> configureOptions)
         {
 
             if (!builder.Services.Any(x => x.ServiceType == typeof(IConfigureOptions<PathResolverOptions>)))
@@ -50,16 +53,16 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
         #region DomainResolver
 
-        public static IMultiTenantKitBuilder AddDefaultTenantDomainResolverService(this IMultiTenantKitBuilder builder)
+        public static IMultiTenantKitBuilder AddDefaultDomainResolverService(this IMultiTenantKitBuilder builder)
         {
-            builder.AddDefaultTenantDomainResolverService("{0}.midomain.com");
+            builder.AddDefaultDomainResolverService("{0}.midomain.com");
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantDomainResolverService(this IMultiTenantKitBuilder builder, string domainTemplate)
+        public static IMultiTenantKitBuilder AddDefaultDomainResolverService(this IMultiTenantKitBuilder builder, string domainTemplate)
         {
-            builder.AddDefaultTenantDomainResolverService(options =>
+            builder.AddDefaultDomainResolverService(options =>
             {
                 options.DomainTemplate = domainTemplate;
             });
@@ -67,7 +70,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantDomainResolverService(this IMultiTenantKitBuilder builder, Action<HostResolverOptions> configureOptions)
+        public static IMultiTenantKitBuilder AddDefaultDomainResolverService(this IMultiTenantKitBuilder builder, Action<HostResolverOptions> configureOptions)
         {
 
             if (!builder.Services.Any(x => x.ServiceType == typeof(IConfigureOptions<HostResolverOptions>)))
@@ -84,16 +87,16 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
         #region ClaimsResolver
 
-        public static IMultiTenantKitBuilder AddDefaultTenantClaimResolverService(this IMultiTenantKitBuilder builder)
+        public static IMultiTenantKitBuilder AddDefaultClaimResolverService(this IMultiTenantKitBuilder builder)
         {
-            builder.AddDefaultTenantClaimResolverService("TenantId");
+            builder.AddDefaultClaimResolverService("TenantId");
 
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantClaimResolverService(this IMultiTenantKitBuilder builder, string claimName)
+        public static IMultiTenantKitBuilder AddDefaultClaimResolverService(this IMultiTenantKitBuilder builder, string claimName)
         {
-            builder.AddDefaultTenantClaimResolverService(options =>
+            builder.AddDefaultClaimResolverService(options =>
             {
                 options.ClaimName = claimName;
             });
@@ -101,7 +104,7 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
-        public static IMultiTenantKitBuilder AddDefaultTenantClaimResolverService(this IMultiTenantKitBuilder builder, Action<ClaimResolverOptions> configureOptions)
+        public static IMultiTenantKitBuilder AddDefaultClaimResolverService(this IMultiTenantKitBuilder builder, Action<ClaimResolverOptions> configureOptions)
         {
 
             if (!builder.Services.Any(x => x.ServiceType == typeof(IConfigureOptions<ClaimResolverOptions>)))
@@ -116,15 +119,23 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
 
         #endregion
 
+        #endregion
+
+        #region Mappers
+
         public static IMultiTenantKitBuilder AddDefaultTenantMapperService(this IMultiTenantKitBuilder builder)
         {
-            Type ITenantMapperType = typeof(ITenantMapperService);
+            Type ITenantMapperType = typeof(ITenantMapperService<>).MakeGenericType(builder.TenantMappingType);
             Type STenantMapperType = typeof(TenantMapperService<>).MakeGenericType(builder.TenantMappingType);
 
             builder.Services.TryAddTransient(ITenantMapperType, STenantMapperType);
 
             return builder;
         }
+
+        #endregion
+
+        #region Info
 
         public static IMultiTenantKitBuilder AddDefaultTenantInfoService(this IMultiTenantKitBuilder builder)
         {
@@ -137,6 +148,10 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
+        #endregion
+
+        #region Provider
+
         public static IMultiTenantKitBuilder AddDefaultTenantProviderService(this IMultiTenantKitBuilder builder)
         {
             Type ITenantProviderType = typeof(ITenantProvider<>).MakeGenericType(builder.TenantType);
@@ -147,5 +162,8 @@ namespace DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExt
             return builder;
         }
 
+        #endregion
+
+        #endregion
     }
 }

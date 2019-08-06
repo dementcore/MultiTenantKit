@@ -1,4 +1,5 @@
 ﻿using DementCore.MultiTenantKit.Core;
+using DementCore.MultiTenantKit.Core.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Text;

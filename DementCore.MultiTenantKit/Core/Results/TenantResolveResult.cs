@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DementCore.MultiTenantKit.Core.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,19 +7,7 @@ namespace DementCore.MultiTenantKit.Core
 {
     public class TenantResolveResult
     {
-        #region Constructors
-
-        /// <summary>
-        /// Create a TenantResolveResult that indicates that the tenant's resolution result of this request.
-        /// </summary>
-        /// <param name="resolutionResult"></param>
-        public TenantResolveResult(ResolutionResult resolutionResult)
-        {
-            Value = "";
-            ResolutionType = ResolutionType.Nothing;
-            ResolutionResult = resolutionResult;
-            ErrorMessage = "";
-        }
+        #region Public Constructors
 
         /// <summary>
         /// Creates a TenantResolveResult that indicates a tenant resolution has been performed.
@@ -30,7 +19,7 @@ namespace DementCore.MultiTenantKit.Core
             if (string.IsNullOrWhiteSpace(value))
             {
                 Value = value;
-                ResolutionResult = ResolutionResult.NotApply;
+                ResolutionResult = ResolutionResult.NotFound;
                 ResolutionType = ResolutionType.Nothing;
                 ErrorMessage = "";
             }
@@ -38,7 +27,7 @@ namespace DementCore.MultiTenantKit.Core
             {
                 Value = value;
                 ResolutionResult = ResolutionResult.Success;
-                ResolutionType = resolvedType;
+                ResolutionType = (resolvedType == ResolutionType.Nothing) ? ResolutionType.TenantName : resolvedType;
                 ErrorMessage = "";
             }
         }
@@ -75,6 +64,22 @@ namespace DementCore.MultiTenantKit.Core
             ResolutionResult = ResolutionResult.Error;
             ResolutionType = ResolutionType.Nothing;
             ErrorMessage = errorMessage;
+        }
+
+        #endregion
+
+        #region Private Constructors
+
+        /// <summary>
+        /// Create a TenantResolveResult that indicates that the tenant's resolution result of this request.
+        /// </summary>
+        /// <param name="resolutionResult"></param>
+        private TenantResolveResult(ResolutionResult resolutionResult)
+        {
+            Value = "";
+            ResolutionType = ResolutionType.Nothing;
+            ResolutionResult = resolutionResult;
+            ErrorMessage = "";
         }
 
         #endregion

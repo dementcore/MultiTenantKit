@@ -1,4 +1,6 @@
 # DementCore.MultiTenantKit
-Kit to easily add tenant resolution to Net Core Web applications
+Kit to add tenant resolution capabilities in AspNetCore Web Applications
 
-In development
+# TODO
+Samples 
+Test Project

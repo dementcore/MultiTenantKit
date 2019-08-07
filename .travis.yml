@@ -1,8 +1,9 @@
 language: csharp
-solution: DementCore.MutiTenantKit.sln
+sudo: required
 mono: none
 dotnet: 2.2.401
-#install:
-#- dotnet restore
-#script:
-#- dotnet build
+dist: xenial
+install:
+- dotnet restore DementCore.MutiTenantKit.sln
+script:
+- dotnet build DementCore.MutiTenantKit.sln

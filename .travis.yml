@@ -2,3 +2,5 @@ language: csharp
 solution: DementCore.MutiTenantKit.sln
 mono: none
 dotnet: 2.2.401
+script:
+ - dotnet build

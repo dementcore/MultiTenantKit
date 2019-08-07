@@ -1,7 +1,7 @@
 ﻿using DementCore.MultiTenantKit.Configuration.DependencyInjection.BuilderExtensions;
 using DementCore.MultiTenantKit.Configuration.Options;
 using DementCore.MultiTenantKit.Core.Models;
-using DementCore.MultiTenantKit.Core.Stores.Default;
+using DementCore.MultiTenantKit.Core.Stores.InMemory;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

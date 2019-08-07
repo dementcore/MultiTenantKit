@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantMapperService<TTenantMappings> : ITenantMapperService<TTenantMappings> 
+    public class TenantMapperService<TTenantMappings> : ITenantMapperService<TTenantMappings> 
         where TTenantMappings : ITenantMapping
     {
         private ITenantMappingStore<TTenantMappings> NamesStore { get; }

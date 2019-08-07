@@ -1,6 +1,6 @@
 ﻿using DementCore.MultiTenantKit.Core.Models;
 using DementCore.MultiTenantKit.Core.Stores;
-using DementCore.MultiTenantKit.Core.Stores.Default;
+using DementCore.MultiTenantKit.Core.Stores.InMemory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantInfoService<TTenant> : ITenantInfoService<TTenant> where TTenant : ITenant
+    public class TenantInfoService<TTenant> : ITenantInfoService<TTenant> where TTenant : ITenant
     {
         ITenantStore<TTenant> TenantStore { get; }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Core.Services
 {
-    internal class TenantPathResolverService : ITenantResolverService
+    public class TenantPathResolverService : ITenantResolverService
     {
         private PathResolverOptions Options { get; }
 

@@ -3,7 +3,7 @@ using DementCore.MultiTenantKit.Core.Models;
 using System;
 using System.Collections.Generic;
 
-namespace DementCore.MultiTenantKit.Core.Stores.Default
+namespace DementCore.MultiTenantKit.Core.Stores.InMemory
 {
     public class InMemoryTenantStore<TTenant> : ITenantStore<TTenant> where TTenant : ITenant
     {

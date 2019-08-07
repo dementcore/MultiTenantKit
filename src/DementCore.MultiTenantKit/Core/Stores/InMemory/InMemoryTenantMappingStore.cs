@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DementCore.MultiTenantKit.Core.Stores.Default
+namespace DementCore.MultiTenantKit.Core.Stores.InMemory
 {
-    class InMemoryTenantMappingStore<TTenantMapping> : ITenantMappingStore<TTenantMapping> where TTenantMapping : ITenantMapping
+    public class InMemoryTenantMappingStore<TTenantMapping> : ITenantMappingStore<TTenantMapping> where TTenantMapping : ITenantMapping
     {
         private List<TTenantMapping> TenantMappings { get; }
 

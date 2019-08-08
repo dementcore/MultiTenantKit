@@ -37,22 +37,20 @@ namespace DementCore.MultiTenantKit.Core.Services
 
             if (!httpContext.Request.Host.Host.Unformat(Options.DomainTemplate, out parts))
             {
-                //if the request domain not match does not apply
+                //if the request domain not match the resolution does not apply
                 return Task.FromResult(TenantResolveResult.NotApply);
             }
 
             if (parts.Length <= 0)
             {
-                //if the request
+                //if the request domain matches against template but the extracted parts are 0 or less than 0 
+                //we have not found the tenant
                 return Task.FromResult(TenantResolveResult.NotFound);
             }
-            else
-            {
-                tenantInfo = string.Concat(parts);
+            
+            tenantInfo = string.Concat(parts);
 
-                return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
-            }
-
+            return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace DementCore.MultiTenantKit.Core.Services
 
             ClaimsIdentity identity = httpContext.User.Identity as ClaimsIdentity;
 
-            if (identity == null)
+            if (!(identity is ClaimsIdentity))
             {
                 return Task.FromResult(TenantResolveResult.NotApply);
             }

@@ -8,10 +8,8 @@ namespace DementCore.MultiTenantKit.Core.Stores
     /// Interface de servicio para realizar la extracción de información del inquilino y construcción de la entidad que lo representa.
     /// </summary>
     /// <typeparam name="TTenant"></typeparam>
-    public interface ITenantStore<TTenant> where TTenant :  ITenant
+    public interface ITenantStore<out TTenant> where TTenant :  ITenant
     {
-        List<TTenant> GetTenants();
-
         TTenant GetTenantByTenantId(string tenantId);
     }
 }

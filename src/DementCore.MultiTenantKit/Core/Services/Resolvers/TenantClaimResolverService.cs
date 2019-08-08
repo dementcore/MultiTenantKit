@@ -25,21 +25,18 @@ namespace DementCore.MultiTenantKit.Core.Services
 
             try
             {
-                ClaimsIdentity identity = null;
+                ClaimsIdentity identity = httpContext.User.Identity as ClaimsIdentity;
 
-                if (httpContext.User.Identity is ClaimsIdentity)
+                if (identity == null)
                 {
-                    identity = (ClaimsIdentity)httpContext.User.Identity;
+                    return Task.FromResult(TenantResolveResult.NotApply);
                 }
 
-                if (Options.OnlyAuthenticated)
+                if (Options.OnlyAuthenticated && !httpContext.User.Identity.IsAuthenticated)
                 {
-                    if (!httpContext.User.Identity.IsAuthenticated)
-                    {
-                        //if the user is not authenticated and the system is configured to only resolve in authenticated user 
-                        //the resolution does not apply
-                        return Task.FromResult(TenantResolveResult.NotApply);
-                    }
+                    //if the user is not authenticated and the system is configured to only resolve in authenticated user 
+                    //the resolution does not apply
+                    return Task.FromResult(TenantResolveResult.NotApply);
                 }
 
                 //the identity of the user is not claims identity so this system does not apply by default

@@ -10,7 +10,7 @@ namespace DementCore.MultiTenantKit.Core.Services
     /// Interface de servicio para proveer de la instancia del inquilino
     /// </summary>
     /// <typeparam name="TTenant"></typeparam>
-    public interface ITenantProvider<TTenant> where TTenant : ITenant
+    public interface ITenantProvider<out TTenant> where TTenant : ITenant
     {
         TTenant GetTenant();
     }

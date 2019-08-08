@@ -16,16 +16,11 @@ namespace DementCore.MultiTenantKit.Core.Stores.InMemory
             TenantMappings = tenantMappings;
         }
 
-        public List<TTenantMapping> GetTenantMappings()
-        {
-            return TenantMappings;
-        }
-
+       
         public TTenantMapping GetTenantMappingByName(string tenantName)
         {
-            List<TTenantMapping> tenantMappings = GetTenantMappings();
-
-            TTenantMapping _tenantName = (from tenant in tenantMappings where tenant.Names.Contains(tenantName) select tenant).FirstOrDefault();
+            
+            TTenantMapping _tenantName = (from tenant in TenantMappings where tenant.Names.Contains(tenantName) select tenant).FirstOrDefault();
 
             return _tenantName;
         }

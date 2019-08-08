@@ -14,11 +14,6 @@ namespace DementCore.MultiTenantKit.Core.Stores.InMemory
             Tenants = tenants;
         }
 
-        public List<TTenant> GetTenants()
-        {
-            return Tenants;
-        }
-
         public TTenant GetTenantByTenantId(string tenantId)
         {
             System.Reflection.PropertyInfo[] props = typeof(TTenant).GetProperties();

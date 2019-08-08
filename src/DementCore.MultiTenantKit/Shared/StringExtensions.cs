@@ -21,9 +21,15 @@ namespace DementCore.MultiTenantKit.Shared
             get
             {
                 if (_escapeRegEx == null)
+                {
                     lock (_initLock)
+                    {
                         if (_escapeRegEx == null)
+                        {
                             InitExpressions();
+                        }
+                    }
+                }
 
                 return _escapeRegEx;
             }
@@ -35,9 +41,16 @@ namespace DementCore.MultiTenantKit.Shared
             get
             {
                 if (_selectorRegEx == null)
+                {
                     lock (_initLock)
+                    {
+
                         if (_selectorRegEx == null)
+                        {
                             InitExpressions();
+                        }
+                    }
+                }
 
                 return _selectorRegEx;
             }
@@ -87,7 +100,9 @@ namespace DementCore.MultiTenantKit.Shared
 
                 //  see if this capture was found
                 if (capture == null || !capture.Success)
+                {
                     break;
+                }
 
                 // add it to the output list
                 outputList.Add(capture.Value);

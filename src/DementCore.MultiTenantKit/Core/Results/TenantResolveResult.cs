@@ -14,7 +14,7 @@ namespace DementCore.MultiTenantKit.Core
         /// </summary>
         /// <param name="value"></param>
         /// <param name="resolvedType"></param>
-        public TenantResolveResult(string value, ResolutionType resolvedType = ResolutionType.TenantName)
+        public TenantResolveResult(string value, ResolutionType resolvedType)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -40,7 +40,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (exception == null)
             {
-                exception = new Exception("Unable to resolve the tenant's name from route.");
+                throw new ArgumentNullException("You must specify an exception.");
             }
 
             Value = "";
@@ -57,7 +57,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                errorMessage = "Unable to resolve the tenant's name from route.";
+                throw new ArgumentNullException("You must specify a error message ");
             }
 
             Value = "";

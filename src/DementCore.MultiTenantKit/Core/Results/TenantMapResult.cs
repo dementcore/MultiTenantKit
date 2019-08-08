@@ -6,13 +6,13 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Core
 {
-    public class TenantMapResult<TTenantMapping>
+    public class TenantMapResult<TTenantMapping> where TTenantMapping : ITenantMapping
     {
         #region Public Constructors
 
         public TenantMapResult(TTenantMapping value)
         {
-            if (value == null)
+            if (value.Equals(default(TTenantMapping)))
             {
                 MappingResult = MappingResult.NotFound;
             }
@@ -29,7 +29,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (exception == null)
             {
-                exception = new Exception("Unable to map the tenant's from tenant's name");
+                throw new ArgumentNullException("You must specify an exception.");
             }
 
             Value = default;
@@ -41,7 +41,7 @@ namespace DementCore.MultiTenantKit.Core
         {
             if (string.IsNullOrWhiteSpace(errorMessage))
             {
-                errorMessage = "Unable to resolve the tenant's name from route.";
+                throw new ArgumentNullException("You must specify a error message ");
             }
 
             Value = default;

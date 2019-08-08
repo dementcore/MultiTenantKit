@@ -5,10 +5,9 @@ using System.Text;
 
 namespace DementCore.MultiTenantKit.Core.Stores
 {
-    public interface ITenantMappingStore<TTenantMapping> where TTenantMapping : ITenantMapping
+    public interface ITenantMappingStore<out TTenantMapping> where TTenantMapping : ITenantMapping
     {
-        List<TTenantMapping> GetTenantMappings();
-
+     
         TTenantMapping GetTenantMappingByName(string tenantName);
     }
 }

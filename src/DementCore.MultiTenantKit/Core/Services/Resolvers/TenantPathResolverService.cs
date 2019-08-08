@@ -42,17 +42,14 @@ namespace DementCore.MultiTenantKit.Core.Services
                 return Task.FromResult(TenantResolveResult.NotApply);
             }
 
-            if (!string.IsNullOrWhiteSpace(tenantInfo))
-            {
-                //route contains the configured route segment name and the extracted tenant contains something
-                return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
-            }
-            else
+            if (string.IsNullOrWhiteSpace(tenantInfo))
             {
                 //route contains the configured route segment name but the extracted tenant is empty or null
                 return Task.FromResult(TenantResolveResult.NotFound);
             }
-
+            
+            //route contains the configured route segment name and the extracted tenant contains something
+            return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
         }
 
         public static bool MatchRoute(string routeTemplate, string requestPath)

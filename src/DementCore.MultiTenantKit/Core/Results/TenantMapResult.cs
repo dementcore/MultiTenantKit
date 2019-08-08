@@ -22,31 +22,6 @@ namespace DementCore.MultiTenantKit.Core
             }
 
             Value = value;
-            ErrorMessage = "";
-        }
-
-        public TenantMapResult(Exception exception)
-        {
-            if (exception == null)
-            {
-                throw new ArgumentNullException("You must specify an exception.");
-            }
-
-            Value = default;
-            MappingResult = MappingResult.Error;
-            ErrorMessage = exception?.Message ?? "";
-        }
-
-        public TenantMapResult(string errorMessage)
-        {
-            if (string.IsNullOrWhiteSpace(errorMessage))
-            {
-                throw new ArgumentNullException("You must specify a error message ");
-            }
-
-            Value = default;
-            MappingResult = MappingResult.Error;
-            ErrorMessage = errorMessage;
         }
 
         #endregion
@@ -57,7 +32,6 @@ namespace DementCore.MultiTenantKit.Core
         {
             MappingResult = mappingResult;
             Value = default;
-            ErrorMessage = "";
         }
 
         #endregion
@@ -71,8 +45,6 @@ namespace DementCore.MultiTenantKit.Core
         #region Public Properties
 
         public TTenantMapping Value { get; }
-
-        public string ErrorMessage { get; }
 
         public MappingResult MappingResult { get; }
 

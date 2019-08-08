@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace DementCore.MultiTenantKit.Shared
 {
     /// <summary>
-    /// Source: https://blogs.msdn.microsoft.com/simonince/2009/07/09/string-unformat-ive-created-a-monster/
+    /// Credits: https://blogs.msdn.microsoft.com/simonince/2009/07/09/string-unformat-ive-created-a-monster/
     /// </summary>
     internal static class StringExtensions
     {
@@ -72,8 +72,8 @@ namespace DementCore.MultiTenantKit.Shared
             // Escape special regular expression characters with a backslash
             string interim = EscapeRegEx.Replace(formatString, @"\$1");
 
-            // Turn format string style {0} into regex style (?<C0>.+)
-            // Note that this doesn't support better formatting yet: e.g. {0:d}
+            // Turn format string style {0} into regex style 
+            // Note that this doesn't support better formatting yet:
             interim = SelectorRegEx.Replace(interim, @"(?<C$1>.+)");
 
             // add start and end markers

@@ -27,36 +27,30 @@ namespace DementCore.MultiTenantKit.Core.Services
         {
             string tenantInfo = "";
 
-            try
+            if (Options.ExcludedDomains.Contains(httpContext.Request.Host.Host))
             {
-                if (Options.ExcludedDomains.Contains(httpContext.Request.Host.Host))
-                {
-                    //if the request domain is in the exclusion list, the resolution does not apply.
-                    return Task.FromResult(TenantResolveResult.NotApply);
-                }
-
-                object[] parts;
-                if (!httpContext.Request.Host.Host.Unformat(Options.DomainTemplate, out parts))
-                {
-                    //if the request domain not match does not apply
-                    return Task.FromResult(TenantResolveResult.NotApply);
-                }
-
-                if (parts.Length <= 0)
-                {
-                    //if the request
-                    return Task.FromResult(TenantResolveResult.NotFound);
-                }
-                else
-                {
-                    tenantInfo = string.Concat(parts);
-
-                    return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
-                }
+                //if the request domain is in the exclusion list, the resolution does not apply.
+                return Task.FromResult(TenantResolveResult.NotApply);
             }
-            catch (Exception ex)
+
+            object[] parts;
+
+            if (!httpContext.Request.Host.Host.Unformat(Options.DomainTemplate, out parts))
             {
-                return Task.FromResult(new TenantResolveResult(ex));
+                //if the request domain not match does not apply
+                return Task.FromResult(TenantResolveResult.NotApply);
+            }
+
+            if (parts.Length <= 0)
+            {
+                //if the request
+                return Task.FromResult(TenantResolveResult.NotFound);
+            }
+            else
+            {
+                tenantInfo = string.Concat(parts);
+
+                return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
             }
 
         }

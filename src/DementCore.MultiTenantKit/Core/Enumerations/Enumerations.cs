@@ -6,7 +6,6 @@ namespace DementCore.MultiTenantKit.Core.Enumerations
 {
     public enum ResolutionType
     {
-        Nothing,
         TenantId,
         TenantName
     }
@@ -15,15 +14,12 @@ namespace DementCore.MultiTenantKit.Core.Enumerations
     {
         Success,
         NotApply,
-        NotFound,
-        Error
+        NotFound
     }
 
     public enum MappingResult
     {
         Success,
-        NotApply,
-        NotFound,
-        Error
+        NotFound
     }
 }

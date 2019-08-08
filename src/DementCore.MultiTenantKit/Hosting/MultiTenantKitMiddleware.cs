@@ -4,6 +4,8 @@ using DementCore.MultiTenantKit.Core.Enumerations;
 using DementCore.MultiTenantKit.Core.Models;
 using DementCore.MultiTenantKit.Core.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 
 namespace DementCore.MultiTenantKit.Hosting
@@ -14,115 +16,93 @@ namespace DementCore.MultiTenantKit.Hosting
     /// <typeparam name="TTenant"></typeparam>
     public class MultiTenantKitMiddleware<TTenant, TTenantMapping> where TTenant : ITenant where TTenantMapping : ITenantMapping
     {
-        private readonly RequestDelegate _next;
+        private RequestDelegate _next { get; }
+        private ITenantResolverService TenantResolverService { get; set; }
+        private ITenantMapperService<TTenantMapping> TenantMapperService { get; set; }
+        private ITenantInfoService<TTenant> TenantInfoService { get; set; }
 
         public MultiTenantKitMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-
-        public async Task Invoke(HttpContext httpContext, ITenantResolverService tenantResolverService, ITenantMapperService<TTenantMapping> tenantMapperService,
-            ITenantInfoService<TTenant> tenantInfoService)
+        public async Task Invoke(HttpContext httpContext)
         {
-            TenantContext<TTenant> _tenantContext = null;
+            string _tenantResolvedData = "";
 
+
+            TenantContext<TTenant> _tenantContext = null;
             TenantResolveResult _tenantResolveResult = null;
             TenantMapResult<TTenantMapping> _tenantMapResult = null;
 
             TTenant _tenant = default;
-            TTenantMapping _tenantMapping = default;
 
-            ResolutionResult _resolutionResult = ResolutionResult.NotFound;
-            MappingResult _mappingResult = MappingResult.NotFound;
-            ResolutionType _resolutionType = ResolutionType.Nothing;
+            bool _needMapping = false;
 
-            string _tenantResolvedData = "";
+            TenantResolverService = httpContext.RequestServices.GetRequiredService<ITenantResolverService>();
+            TenantInfoService = httpContext.RequestServices.GetRequiredService<ITenantInfoService<TTenant>>();
 
-            _tenantResolveResult = await tenantResolverService.ResolveTenantAsync(httpContext);
-            _resolutionResult = _tenantResolveResult.ResolutionResult;
-
-            switch (_resolutionResult)
+            try
             {
-                case ResolutionResult.Success:
-
-                    _resolutionType = _tenantResolveResult.ResolutionType;
-                    _tenantResolvedData = _tenantResolveResult.Value;
-
-                    switch (_resolutionType)
-                    {
-                        case ResolutionType.TenantId:
-                            _mappingResult = MappingResult.NotApply;
-                            break;
-
-                        case ResolutionType.TenantName:
-                            _mappingResult = MappingResult.Success;
-                            break;
-                    }
-
-                    break;
-
-                case ResolutionResult.NotApply:
-
-                    _mappingResult = MappingResult.NotApply;
-                    _tenantResolvedData = "";
-                    break;
-
-                case ResolutionResult.NotFound:
-
-                    _mappingResult = MappingResult.NotFound;
-                    _tenantResolvedData = "";
-                    break;
-
-                case ResolutionResult.Error:
-
-                    _mappingResult = MappingResult.Error;
-                    _tenantResolvedData = "";
-                    break;
+                _tenantResolveResult = await TenantResolverService.ResolveTenantAsync(httpContext);
+            }
+            catch (Exception ex)
+            {
+                throw new MultiTenantKitException("Tenant resolution error", ex);
             }
 
-            if (_resolutionResult == ResolutionResult.Success)
+            if (_tenantResolveResult.ResolutionResult == ResolutionResult.Success)
             {
-                if (_mappingResult != MappingResult.NotApply) //if applies mapping call mapping service
+                _tenantResolvedData = _tenantResolveResult.Value;
+
+                if (_tenantResolveResult.ResolutionType == ResolutionType.TenantName)
                 {
-                    _tenantMapResult = await tenantMapperService.MapTenantAsync(_tenantResolveResult.Value);
-                    _mappingResult = _tenantMapResult.MappingResult;
-
-                    switch (_mappingResult)
-                    {
-                        case MappingResult.Success:
-
-                            _tenantMapping = _tenantMapResult.Value;
-                            _tenantResolvedData = _tenantMapping.TenantId;
-
-                            break;
-
-                        case MappingResult.NotFound:
-
-                            _tenantResolvedData = "";
-                            _resolutionResult = ResolutionResult.NotFound;
-                            _resolutionType = ResolutionType.Nothing;
-
-                            break;
-
-                        case MappingResult.Error:
-
-                            _tenantResolvedData = "";
-                            _resolutionResult = ResolutionResult.Error;
-                            _resolutionType = ResolutionType.Nothing;
-
-                            break;
-                    }
-                }
-
-                //at this point it must be the id
-                if (!string.IsNullOrWhiteSpace(_tenantResolvedData))
-                {
-                    _tenant = await tenantInfoService.GetTenantInfoAsync(_tenantResolvedData);
+                    _needMapping = true;
                 }
             }
 
-            _tenantContext = new TenantContext<TTenant>(_tenant, _resolutionResult, _mappingResult, _resolutionType);
+            if (_tenantResolveResult.ResolutionResult == ResolutionResult.NotApply)
+            {
+                await _next(httpContext);
+                return;
+            }
+
+            if (_tenantResolveResult.ResolutionResult == ResolutionResult.NotFound)
+            {
+                throw new MultiTenantKitException("The tenant could not be resolved in request");
+            }
+
+            if (_needMapping)
+            {
+                TenantMapperService = httpContext.RequestServices.GetRequiredService<ITenantMapperService<TTenantMapping>>();
+
+                try
+                {
+                    _tenantMapResult = await TenantMapperService.MapTenantAsync(_tenantResolveResult.Value);
+                }
+                catch (Exception ex)
+                {
+                    throw new MultiTenantKitException("Tenant mapping error", ex);
+                }
+
+                if (_tenantMapResult.MappingResult == MappingResult.Success)
+                {
+                    _tenantResolvedData = _tenantMapResult.Value.TenantId;
+                }
+
+                if (_tenantMapResult.MappingResult == MappingResult.NotFound)
+                {
+                    throw new MultiTenantKitException("The tenant's identification could not be mapped against the resolved name because no mapping can be found.");
+                }
+            }
+
+            //at this point it must be info
+            if (!string.IsNullOrWhiteSpace(_tenantResolvedData))
+            {
+                _tenant = await TenantInfoService.GetTenantInfoAsync(_tenantResolvedData);
+            }
+
+            _tenantContext = new TenantContext<TTenant>(_tenant);
 
             httpContext.SetTenantContext(_tenantContext);
 

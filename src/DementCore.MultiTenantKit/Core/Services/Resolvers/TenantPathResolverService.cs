@@ -27,37 +27,30 @@ namespace DementCore.MultiTenantKit.Core.Services
         {
             string tenantInfo = "";
 
-            try
+            foreach (string ruta in Options.ExcludedRouteTemplates)
             {
-                foreach (string ruta in Options.ExcludedRouteTemplates)
+                if (MatchRoute(ruta, httpContext.Request.Path))
                 {
-                    if (MatchRoute(ruta, httpContext.Request.Path))
-                    {
-                        //if the request route is in the exclusion list, the resolution does not apply.
-                        return Task.FromResult(TenantResolveResult.NotApply);
-                    }
-                }
-
-                if (!ExtractInfoFromRoute(httpContext, out tenantInfo))
-                {
-                    //not apply tenant resolution
+                    //if the request route is in the exclusion list, the resolution does not apply.
                     return Task.FromResult(TenantResolveResult.NotApply);
                 }
-
-                if (!string.IsNullOrWhiteSpace(tenantInfo))
-                {
-                    //route contains the configured route segment name and the extracted tenant contains something
-                    return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
-                }
-                else
-                {
-                    //route contains the configured route segment name but the extracted tenant is empty or null
-                    return Task.FromResult(TenantResolveResult.NotFound);
-                }
             }
-            catch (Exception ex)
+
+            if (!ExtractInfoFromRoute(httpContext, out tenantInfo))
             {
-                return Task.FromResult(new TenantResolveResult(ex));
+                //not apply tenant resolution
+                return Task.FromResult(TenantResolveResult.NotApply);
+            }
+
+            if (!string.IsNullOrWhiteSpace(tenantInfo))
+            {
+                //route contains the configured route segment name and the extracted tenant contains something
+                return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
+            }
+            else
+            {
+                //route contains the configured route segment name but the extracted tenant is empty or null
+                return Task.FromResult(TenantResolveResult.NotFound);
             }
 
         }

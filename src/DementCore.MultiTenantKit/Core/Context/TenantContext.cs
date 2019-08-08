@@ -9,18 +9,9 @@ namespace DementCore.MultiTenantKit.Core.Context
     {
         public TTenant Tenant { get; }
 
-        public ResolutionType ResolutionType { get; }
-
-        public ResolutionResult ResolutionResult { get; }
-
-        public MappingResult MappingResult { get; }
-
-        public TenantContext(TTenant tenant, ResolutionResult resolutionResult, MappingResult mappingResult, ResolutionType resolvedType)
+        public TenantContext(TTenant tenant)
         {
             Tenant = tenant;
-            ResolutionResult = resolutionResult;
-            MappingResult = mappingResult;
-            ResolutionType = resolvedType;
         }
     }
 }

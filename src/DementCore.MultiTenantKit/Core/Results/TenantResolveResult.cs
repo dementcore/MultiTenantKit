@@ -20,50 +20,13 @@ namespace DementCore.MultiTenantKit.Core
             {
                 Value = value;
                 ResolutionResult = ResolutionResult.NotFound;
-                ResolutionType = ResolutionType.Nothing;
-                ErrorMessage = "";
             }
             else
             {
                 Value = value;
                 ResolutionResult = ResolutionResult.Success;
-                ResolutionType = (resolvedType == ResolutionType.Nothing) ? ResolutionType.TenantName : resolvedType;
-                ErrorMessage = "";
+                ResolutionType = resolvedType;
             }
-        }
-
-        /// <summary>
-        /// Creates a TenantResolveResult that indicates and error in tenant's resolution
-        /// </summary>
-        /// <param name="exception"></param>
-        public TenantResolveResult(Exception exception)
-        {
-            if (exception == null)
-            {
-                throw new ArgumentNullException("You must specify an exception.");
-            }
-
-            Value = "";
-            ResolutionResult = ResolutionResult.Error;
-            ResolutionType = ResolutionType.Nothing;
-            ErrorMessage = exception?.Message ?? "";
-        }
-
-        /// <summary>
-        /// Creates a TenantResolveResult that indicates and error in tenant's resolution
-        /// </summary>
-        /// <param name="errorMessage"></param>
-        public TenantResolveResult(string errorMessage)
-        {
-            if (string.IsNullOrWhiteSpace(errorMessage))
-            {
-                throw new ArgumentNullException("You must specify a error message ");
-            }
-
-            Value = "";
-            ResolutionResult = ResolutionResult.Error;
-            ResolutionType = ResolutionType.Nothing;
-            ErrorMessage = errorMessage;
         }
 
         #endregion
@@ -77,9 +40,7 @@ namespace DementCore.MultiTenantKit.Core
         private TenantResolveResult(ResolutionResult resolutionResult)
         {
             Value = "";
-            ResolutionType = ResolutionType.Nothing;
             ResolutionResult = resolutionResult;
-            ErrorMessage = "";
         }
 
         #endregion
@@ -101,8 +62,6 @@ namespace DementCore.MultiTenantKit.Core
         #region Public Properties
 
         public string Value { get; }
-
-        public string ErrorMessage { get; }
 
         public ResolutionResult ResolutionResult { get; }
 

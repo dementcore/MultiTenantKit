@@ -37,12 +37,6 @@ namespace DementCore.MultiTenantKit.Core.Services
                 return Task.FromResult(TenantResolveResult.NotApply);
             }
 
-            //the identity of the user is not claims identity so this system does not apply by default
-            if (identity == null)
-            {
-                return Task.FromResult(TenantResolveResult.NotApply);
-            }
-
             if (identity.HasClaim(c => c.Type == Options.ClaimName))
             {
                 tenantInfo = identity.FindFirst(Options.ClaimName).Value;

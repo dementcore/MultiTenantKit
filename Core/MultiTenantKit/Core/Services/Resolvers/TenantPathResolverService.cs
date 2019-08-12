@@ -36,18 +36,14 @@ namespace MultiTenantKit.Core.Services
                 }
             }
 
-            if (!ExtractInfoFromRoute(httpContext, out tenantInfo))
-            {
-                //not apply tenant resolution
-                return Task.FromResult(TenantResolveResult.NotApply);
-            }
+            tenantInfo = ExtractInfoFromRoute(httpContext);
 
             if (string.IsNullOrWhiteSpace(tenantInfo))
             {
                 //route contains the configured route segment name but the extracted tenant is empty or null
                 return Task.FromResult(TenantResolveResult.NotFound);
             }
-            
+
             //route contains the configured route segment name and the extracted tenant contains something
             return Task.FromResult(new TenantResolveResult(tenantInfo, Options.ResolutionType));
         }
@@ -81,21 +77,18 @@ namespace MultiTenantKit.Core.Services
         /// <param name="httpContext"></param>
         /// <param name="tenantRouteFragment"></param>
         /// <returns>True if the route contains the Options.RouteSegmentName. False if the route not contains Options.RouteSegmentName</returns>
-        private bool ExtractInfoFromRoute(HttpContext httpContext, out string tenantRouteFragment)
+        private string ExtractInfoFromRoute(HttpContext httpContext)
         {
-            bool returnValue = false;
-
-            tenantRouteFragment = string.Empty;
+            string tenantRouteFragment = "";
 
             RouteData rData = httpContext.GetRouteData();
 
             if (rData != null && rData.Values != null && rData.Values.ContainsKey(Options.RouteSegmentName))
             {
                 tenantRouteFragment = rData.Values.GetValueOrDefault(Options.RouteSegmentName).ToString();
-                returnValue = true;
             }
 
-            return returnValue;
+            return tenantRouteFragment;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MultiTenantKit.Core
 {
-    public class TenantResolveResult
+    public sealed class TenantResolveResult
     {
         #region Public Constructors
 
@@ -34,7 +34,7 @@ namespace MultiTenantKit.Core
         #region Private Constructors
 
         /// <summary>
-        /// Create a TenantResolveResult that indicates that the tenant's resolution result of this request.
+        /// Create a TenantResolveResult that indicates that the tenant resolution result of this request.
         /// </summary>
         /// <param name="resolutionResult"></param>
         private TenantResolveResult(ResolutionResult resolutionResult)
@@ -48,12 +48,12 @@ namespace MultiTenantKit.Core
         #region Public Static Properties
 
         /// <summary>
-        /// Indicates that the tenant's resolution does not apply in this request.
+        /// Indicates that the tenant resolution does not apply in this request.
         /// </summary>
         public static TenantResolveResult NotApply { get; } = new TenantResolveResult(ResolutionResult.NotApply);
 
         /// <summary>
-        /// Indicates that the tenant's is not found.
+        /// Indicates that the tenant is not found.
         /// </summary>
         public static TenantResolveResult NotFound { get; } = new TenantResolveResult(ResolutionResult.NotFound);
 

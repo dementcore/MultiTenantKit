@@ -16,9 +16,23 @@ namespace MultiTenantKit.Core.Services
             TenantStore = tenantStore;
         }
 
-        public Task<TTenant> GetTenantInfoAsync(string tenantId)
+        public Task<TenantInfoResult<TTenant>> GetTenantInfoAsync(string tenantId)
         {
-            return Task.FromResult(TenantStore.GetTenantByTenantId(tenantId));
+            TenantInfoResult<TTenant> infoResult;
+
+            TTenant tenant = TenantStore.GetTenantByTenantId(tenantId);
+
+            if (tenant == null)
+            {
+                infoResult = TenantInfoResult<TTenant>.NotFound;
+            }
+            else
+            {
+                infoResult = new TenantInfoResult<TTenant>(tenant);
+            }
+
+            return Task.FromResult(infoResult);
+
         }
     }
 }

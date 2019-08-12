@@ -6,19 +6,19 @@ using System.Text;
 
 namespace MultiTenantKit.Core
 {
-    public sealed class TenantMapResult<TTenantMapping> where TTenantMapping : ITenantMapping
+    public sealed class TenantInfoResult<TTenant> where TTenant : ITenant
     {
         #region Public Constructors
 
-        public TenantMapResult(TTenantMapping value)
+        public TenantInfoResult(TTenant value)
         {
             if (value == null)
             {
-                MappingResult = MappingResult.NotFound;
+                InfoResult = InfoResult.NotFound;
             }
             else
             {
-                MappingResult = MappingResult.Success;
+                InfoResult = InfoResult.Success;
             }
 
             Value = value;
@@ -28,9 +28,9 @@ namespace MultiTenantKit.Core
 
         #region Private Constructors
 
-        private TenantMapResult(MappingResult mappingResult)
+        private TenantInfoResult(InfoResult mappingResult)
         {
-            MappingResult = mappingResult;
+            InfoResult = mappingResult;
             Value = default;
         }
 
@@ -38,15 +38,15 @@ namespace MultiTenantKit.Core
 
         #region Public Static Properties
 
-        public static TenantMapResult<TTenantMapping> NotFound { get; } = new TenantMapResult<TTenantMapping>(MappingResult.NotFound);
+        public static TenantInfoResult<TTenant> NotFound { get; } = new TenantInfoResult<TTenant>(InfoResult.NotFound);
 
         #endregion
 
         #region Public Properties
 
-        public TTenantMapping Value { get; }
+        public TTenant Value { get; }
 
-        public MappingResult MappingResult { get; }
+        public InfoResult InfoResult { get; }
 
         #endregion
     }

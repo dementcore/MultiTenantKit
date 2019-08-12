@@ -8,6 +8,6 @@ namespace MultiTenantKit.Core.Services
 {
     public interface ITenantInfoService<TTenant> where TTenant : ITenant
     {
-        Task<TTenant> GetTenantInfoAsync(string tenantId);
+        Task<TenantInfoResult<TTenant>> GetTenantInfoAsync(string tenantId);
     }
 }

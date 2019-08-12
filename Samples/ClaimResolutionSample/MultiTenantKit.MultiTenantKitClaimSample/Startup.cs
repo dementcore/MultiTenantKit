@@ -46,8 +46,6 @@ namespace MultiTenantKit.MultiTenantClaimSample
 
             services.AddMultiTenantKit<CustomTenant>()
                 .AddInMemoryTenantsStore(Configuration.GetSection("Tenants:TenantsData"))
-                .AddInMemoryTenantMappingsStore(Configuration.GetSection("Tenants:TenantMappings"))
-                .AddDefaultTenantMapperService()
                 .AddDefaultTenantInfoService()
                 .AddDefaultClaimResolverService(options =>
                 {

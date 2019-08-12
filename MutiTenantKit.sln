@@ -5,13 +5,14 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiTenantKit.MultiTenantRouteSample", "Samples\RouteResolutionSample\MultiTenantKit.MultiTenantKitRouteSample\MultiTenantKit.MultiTenantRouteSample.csproj", "{42442E05-276A-486B-B57E-74FA16D41487}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiTenantKit", "Core\src\MultiTenantKit\MultiTenantKit.csproj", "{A72AAA91-1C77-4F2C-926A-B0AA4504D816}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiTenantKit", "Core\MultiTenantKit\MultiTenantKit.csproj", "{A72AAA91-1C77-4F2C-926A-B0AA4504D816}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{6C2B836D-BF91-406B-8E8D-5A9E4E2256E9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1CF55966-D77D-42AE-BBBC-71B6C6CBC6F7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{547B2605-8FF6-4E91-BFC8-EC9251FC48C2}"
+	ProjectSection(SolutionItems) = preProject
+		Core\README.md = Core\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RouteResolutionSample", "RouteResolutionSample", "{987BC1E0-B68F-4E96-BEBF-5D030BF29E3B}"
 	ProjectSection(SolutionItems) = preProject
@@ -31,6 +32,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClaimResolutionSample", "Cl
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiTenantKit.MultiTenantClaimSample", "Samples\ClaimResolutionSample\MultiTenantKit.MultiTenantKitClaimSample\MultiTenantKit.MultiTenantClaimSample.csproj", "{440B771B-1DE3-4C45-B0DF-60F0D7BEBD18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MVC", "MVC", "{24A2656E-C091-4CB9-9208-A5EE04F26BEE}"
+	ProjectSection(SolutionItems) = preProject
+		MVC\README.md = MVC\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenantKit.Mvc", "MVC\MultiTenantKit.Mvc\MultiTenantKit.Mvc.csproj", "{9746E7A6-3723-4E9F-B47C-B47D1064C434}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,19 +62,23 @@ Global
 		{440B771B-1DE3-4C45-B0DF-60F0D7BEBD18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{440B771B-1DE3-4C45-B0DF-60F0D7BEBD18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{440B771B-1DE3-4C45-B0DF-60F0D7BEBD18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9746E7A6-3723-4E9F-B47C-B47D1064C434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9746E7A6-3723-4E9F-B47C-B47D1064C434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9746E7A6-3723-4E9F-B47C-B47D1064C434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9746E7A6-3723-4E9F-B47C-B47D1064C434}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{42442E05-276A-486B-B57E-74FA16D41487} = {987BC1E0-B68F-4E96-BEBF-5D030BF29E3B}
-		{A72AAA91-1C77-4F2C-926A-B0AA4504D816} = {1CF55966-D77D-42AE-BBBC-71B6C6CBC6F7}
-		{1CF55966-D77D-42AE-BBBC-71B6C6CBC6F7} = {547B2605-8FF6-4E91-BFC8-EC9251FC48C2}
+		{A72AAA91-1C77-4F2C-926A-B0AA4504D816} = {547B2605-8FF6-4E91-BFC8-EC9251FC48C2}
 		{987BC1E0-B68F-4E96-BEBF-5D030BF29E3B} = {6C2B836D-BF91-406B-8E8D-5A9E4E2256E9}
 		{223337D5-89B6-437F-B8C9-AA4A95D1587C} = {6C2B836D-BF91-406B-8E8D-5A9E4E2256E9}
 		{99D7B9F3-3B9A-4F67-ACFC-371B1CFDA3EB} = {223337D5-89B6-437F-B8C9-AA4A95D1587C}
 		{0EF919F7-5292-47A9-85A7-05B9BD2FF8D8} = {6C2B836D-BF91-406B-8E8D-5A9E4E2256E9}
 		{440B771B-1DE3-4C45-B0DF-60F0D7BEBD18} = {0EF919F7-5292-47A9-85A7-05B9BD2FF8D8}
+		{9746E7A6-3723-4E9F-B47C-B47D1064C434} = {24A2656E-C091-4CB9-9208-A5EE04F26BEE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FBD345F-6114-4747-8824-C3939C081F39}

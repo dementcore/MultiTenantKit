@@ -14,7 +14,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Core\src\MultiTenantKit\MultiTenantKit.csproj" />
+    <ProjectReference Include="..\..\..\Core\MultiTenantKit\MultiTenantKit.csproj" />
   </ItemGroup>
 
 </Project>

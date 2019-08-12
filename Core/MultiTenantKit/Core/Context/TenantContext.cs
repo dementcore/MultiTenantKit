@@ -9,11 +9,6 @@ namespace MultiTenantKit.Core.Context
     {
         public string TenantUrlSlug { get; protected internal set; }
 
-        public TTenant Tenant { get; }
-
-        public TenantContext(TTenant tenant)
-        {
-            Tenant = tenant;
-        }
+        public TTenant Tenant { get; protected internal set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using MultiTenantKit.Configuration.Options;
-using MultiTenantKit.Core.Models;
-using MultiTenantKit.Hosting;
-using Microsoft.AspNetCore.Internal;
+﻿using Microsoft.AspNetCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using MultiTenantKit.Configuration.Options;
+using MultiTenantKit.Hosting;
+using MultiTenantKit.Hosting.Events;
 using System;
 
 namespace Microsoft.AspNetCore.Builder
@@ -17,20 +18,10 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static IApplicationBuilder UseMultiTenantKit(this IApplicationBuilder builder)
         {
+            IOptionsMonitor<TenantMiddlewareOptions> options =
+                builder.ApplicationServices.GetRequiredService(typeof(IOptionsMonitor<TenantMiddlewareOptions>)) as IOptionsMonitor<TenantMiddlewareOptions>;
 
-            object options = builder.ApplicationServices.GetService(typeof(IOptionsMonitor<TenantMiddlewareOptions>));
-
-            TenantMiddlewareOptions tenantMiddlewareOptions = null;
-
-            if (options != null)
-            {
-                tenantMiddlewareOptions = ((IOptionsMonitor<TenantMiddlewareOptions>)options).CurrentValue;
-            }
-
-            if (tenantMiddlewareOptions == null)
-            {
-                throw new InvalidOperationException("Unable to add middleware to request pipeline because you have not registered the MultiTenantKit Services.");
-            }
+            TenantMiddlewareOptions tenantMiddlewareOptions = options.CurrentValue;
 
             Type middlewareType = typeof(MultiTenantKitMiddleware<,>).MakeGenericType(tenantMiddlewareOptions.TenantType, tenantMiddlewareOptions.TenantMappingType);
 

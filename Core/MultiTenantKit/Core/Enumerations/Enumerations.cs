@@ -22,4 +22,10 @@ namespace MultiTenantKit.Core.Enumerations
         Success,
         NotFound
     }
+
+    public enum InfoResult
+    {
+        Success,
+        NotFound
+    }
 }

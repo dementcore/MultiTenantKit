@@ -25,7 +25,7 @@ namespace MultiTenantKit.Hosting
 
         private HttpContext HttpContext { get; set; }
 
-        private bool _needMapping = false;
+        private bool _needMapping;
 
         public MultiTenantKitMiddleware(RequestDelegate next, IOptionsMonitor<MultiTenantKitMiddlewareEvents<TTenant, TTenantMapping>> middlewareEvents)
         {
@@ -37,7 +37,7 @@ namespace MultiTenantKit.Hosting
         {
             HttpContext = httpContext;
 
-            string tenantResolvedData = await ResolveTenant();
+            string tenantResolvedData = await ResolveTenant().ConfigureAwait(false);
 
             TenantContext<TTenant> tenantContext = new TenantContext<TTenant>();
             if (string.IsNullOrWhiteSpace(tenantResolvedData))
@@ -49,7 +49,7 @@ namespace MultiTenantKit.Hosting
 
             if (_needMapping)
             {
-                tenantResolvedData = await MapTenant(tenantResolvedData);
+                tenantResolvedData = await MapTenant(tenantResolvedData).ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(tenantResolvedData))
                 {
@@ -57,7 +57,7 @@ namespace MultiTenantKit.Hosting
                 }
             }
 
-            TTenant tenant = await InstanceTenant(tenantResolvedData);
+            TTenant tenant = await InstanceTenant(tenantResolvedData).ConfigureAwait(false);
 
             if (tenant.Equals(default(TTenant)))
             {
@@ -105,9 +105,9 @@ namespace MultiTenantKit.Hosting
                         throw new InvalidOperationException("Invalid tenant resolution result");
                 }
             }
-            catch (MultiTenantKitException exx)
+            catch (MultiTenantKitException)
             {
-                throw exx;
+                throw;
             }
             catch (Exception ex)
             {
@@ -142,9 +142,9 @@ namespace MultiTenantKit.Hosting
                         throw new InvalidOperationException("Invalid tenant mapping result");
                 }
             }
-            catch (MultiTenantKitException exx)
+            catch (MultiTenantKitException)
             {
-                throw exx;
+                throw;
             }
             catch (Exception ex)
             {
@@ -178,9 +178,9 @@ namespace MultiTenantKit.Hosting
                         throw new InvalidOperationException("Invalid tenant info result");
                 }
             }
-            catch (MultiTenantKitException exx)
+            catch (MultiTenantKitException)
             {
-                throw exx;
+                throw;
             }
             catch (Exception ex)
             {

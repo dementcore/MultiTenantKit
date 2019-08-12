@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using MultiTenantKit.Hosting.Events;
 
 namespace MultiTenantKit.Hosting
 {
@@ -21,9 +23,12 @@ namespace MultiTenantKit.Hosting
         private ITenantMapperService<TTenantMapping> TenantMapperService { get; set; }
         private ITenantInfoService<TTenant> TenantInfoService { get; set; }
 
-        public MultiTenantKitMiddleware(RequestDelegate next)
+        private MultiTenantKitMiddlewareEvents MiddlewareEvents { get; }
+
+        public MultiTenantKitMiddleware(RequestDelegate next, IOptionsMonitor<MultiTenantKitMiddlewareEvents> middlewareEvents)
         {
             _next = next;
+            MiddlewareEvents = middlewareEvents.CurrentValue;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -48,7 +53,7 @@ namespace MultiTenantKit.Hosting
             }
             catch (Exception ex)
             {
-                throw new MultiTenantKitException("Tenant resolution error", ex);
+                MiddlewareEvents.TenantResolutionErrorEvent(httpContext.Response, ex);
             }
 
             if (_tenantResolveResult.ResolutionResult == ResolutionResult.Success)
@@ -70,7 +75,7 @@ namespace MultiTenantKit.Hosting
 
             if (_tenantResolveResult.ResolutionResult == ResolutionResult.NotFound)
             {
-                throw new MultiTenantKitException("The tenant can't be resolved because is not found in request");
+                MiddlewareEvents.TenantResolutionNotFoundEvent(httpContext.Response);
             }
 
             if (_needMapping)
@@ -83,7 +88,7 @@ namespace MultiTenantKit.Hosting
                 }
                 catch (Exception ex)
                 {
-                    throw new MultiTenantKitException("Tenant mapping error", ex);
+                    MiddlewareEvents.TenantMappingErrorEvent(httpContext.Response, ex);
                 }
 
                 if (_tenantMapResult.MappingResult == MappingResult.Success)
@@ -93,7 +98,7 @@ namespace MultiTenantKit.Hosting
 
                 if (_tenantMapResult.MappingResult == MappingResult.NotFound)
                 {
-                    throw new MultiTenantKitException("The tenant's identification could not be mapped against the resolved name because no mapping can be found.");
+                    MiddlewareEvents.TenantMappingNotFoundEvent(httpContext.Response);
                 }
             }
 

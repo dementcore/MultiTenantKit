@@ -62,7 +62,7 @@ namespace Microsoft.AspNetCore.Builder
 
             builder.UseEndpointRouting();
 
-            return builder.UseMiddleware(middlewareType);
+            return builder.UseMiddleware(middlewareType, tenantNotFoundCallback);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace MultiTenantKit.Hosting
                             _needMapping = true;
                         }
 
-                        MiddlewareEvents.TenantResolutionSuccessEvent(HttpContext.Response,tenantResolvedData);
+                        MiddlewareEvents.TenantResolutionSuccessEvent(HttpContext.Response, tenantResolvedData);
                         break;
 
                     case ResolutionResult.NotApply:
@@ -111,6 +111,11 @@ namespace MultiTenantKit.Hosting
             }
             catch (Exception ex)
             {
+                if (ex is MultiTenantKitException) //throws because is a multitenantkit exception
+                {
+                    throw;
+                }
+
                 MiddlewareEvents.TenantResolutionErrorEvent(HttpContext.Response, ex);
             }
 
@@ -131,7 +136,7 @@ namespace MultiTenantKit.Hosting
                     case MappingResult.Success:
                         tenantMappedData = tenantMapResult.Value.TenantId;
 
-                        MiddlewareEvents.TenantMappingSuccessEvent(HttpContext.Response,tenantMapResult);
+                        MiddlewareEvents.TenantMappingSuccessEvent(HttpContext.Response, tenantMapResult);
                         break;
 
                     case MappingResult.NotFound:
@@ -148,6 +153,11 @@ namespace MultiTenantKit.Hosting
             }
             catch (Exception ex)
             {
+                if (ex is MultiTenantKitException) //throws because is a multitenantkit exception
+                {
+                    throw;
+                }
+
                 MiddlewareEvents.TenantMappingErrorEvent(HttpContext.Response, ex);
             }
 
@@ -167,7 +177,7 @@ namespace MultiTenantKit.Hosting
                 {
                     case InfoResult.Success:
                         result = tenantInfoResult.Value;
-                        MiddlewareEvents.TenantInfoSuccessEvent(HttpContext.Response,tenantInfoResult);
+                        MiddlewareEvents.TenantInfoSuccessEvent(HttpContext.Response, tenantInfoResult);
                         break;
 
                     case InfoResult.NotFound:
@@ -184,6 +194,11 @@ namespace MultiTenantKit.Hosting
             }
             catch (Exception ex)
             {
+                if (ex is MultiTenantKitException) //throws because is a multitenantkit exception
+                {
+                    throw;
+                }
+
                 MiddlewareEvents.TenantInfoErrorEvent(HttpContext.Response, ex);
             }
 

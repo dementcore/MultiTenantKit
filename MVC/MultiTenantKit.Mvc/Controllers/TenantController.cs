@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using MultiTenantKit.Core.Models;
 
 namespace MultiTenantKit.Mvc.Controllers
@@ -7,7 +9,9 @@ namespace MultiTenantKit.Mvc.Controllers
     public class TenantController<TTenant> : Controller
         where TTenant : ITenant
     {
-
+        /// <summary>
+        /// Current Tenant
+        /// </summary>
         public TTenant Tenant
         {
             get
@@ -20,6 +24,9 @@ namespace MultiTenantKit.Mvc.Controllers
             }
         }
 
+        /// <summary>
+        /// Current Tenant Url Slug
+        /// </summary>
         public string TenantUrlSlug
         {
             get

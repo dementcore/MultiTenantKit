@@ -6,8 +6,8 @@ namespace MultiTenantKit.Configuration.Options
 {
     internal class TenantMiddlewareOptions
     {
-        public Type TenantType { get; set; }
+        public Type TenantType { get; internal set; }
 
-        public Type TenantMappingType { get; set; }
+        public Type TenantMappingType { get; internal set; }
     }
 }

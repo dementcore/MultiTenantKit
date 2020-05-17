@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Internal;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MultiTenantKit.Configuration.Options;
+using MultiTenantKit.Core.Context;
+using MultiTenantKit.Core.Models;
 using MultiTenantKit.Hosting;
 using MultiTenantKit.Hosting.Events;
+using MultiTenantKit.TestBranch;
 using System;
 
 namespace Microsoft.AspNetCore.Builder
@@ -28,6 +32,22 @@ namespace Microsoft.AspNetCore.Builder
             builder.UseEndpointRouting();
 
             return builder.UseMiddleware(middlewareType);
+        }
+
+        public static IApplicationBuilder UsePerTenant<TTenant>(this IApplicationBuilder builder,Action<TenantContext<TTenant>,IApplicationBuilder> pipeline) 
+            where TTenant:ITenant
+        {
+            IOptionsMonitor<TenantMiddlewareOptions> options =
+                builder.ApplicationServices.GetRequiredService(typeof(IOptionsMonitor<TenantMiddlewareOptions>)) as IOptionsMonitor<TenantMiddlewareOptions>;
+
+            TenantMiddlewareOptions tenantMiddlewareOptions = options.CurrentValue;
+
+            Type middlewareType = typeof(MultiTenantPipelineMiddleware<>).MakeGenericType(tenantMiddlewareOptions.TenantType);
+
+            //builder.Use(next => new MultiTenantPipelineMiddleware<TTenant>(next, builder, pipeline).);
+            builder.UseMiddleware(middlewareType,builder, pipeline);
+
+            return builder;
         }
     }
 }

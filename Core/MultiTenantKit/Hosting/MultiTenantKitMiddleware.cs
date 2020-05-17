@@ -42,6 +42,7 @@ namespace MultiTenantKit.Hosting
             TenantContext<TTenant> tenantContext = new TenantContext<TTenant>();
             if (string.IsNullOrWhiteSpace(tenantResolvedData))
             {
+                await _next(httpContext);
                 return;
             }
 
@@ -53,6 +54,7 @@ namespace MultiTenantKit.Hosting
 
                 if (string.IsNullOrWhiteSpace(tenantResolvedData))
                 {
+                    await _next(httpContext);
                     return;
                 }
             }
@@ -61,6 +63,7 @@ namespace MultiTenantKit.Hosting
 
             if (tenant.Equals(default(TTenant)))
             {
+                await _next(httpContext);
                 return;
             }
 

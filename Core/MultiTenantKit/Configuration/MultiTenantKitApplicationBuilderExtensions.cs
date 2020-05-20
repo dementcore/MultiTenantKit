@@ -44,7 +44,6 @@ namespace Microsoft.AspNetCore.Builder
 
             Type middlewareType = typeof(MultiTenantPipelineMiddleware<>).MakeGenericType(tenantMiddlewareOptions.TenantType);
 
-            //builder.Use(next => new MultiTenantPipelineMiddleware<TTenant>(next, builder, pipeline).);
             builder.UseMiddleware(middlewareType,builder, pipeline);
 
             return builder;

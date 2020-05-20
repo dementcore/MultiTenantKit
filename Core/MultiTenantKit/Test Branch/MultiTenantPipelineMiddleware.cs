@@ -39,7 +39,6 @@ namespace MultiTenantKit.TestBranch
         {
             HttpContext = httpContext;
 
-
             var tCtx = HttpContext.GetTenantContext<TTenant>();
 
             if (tCtx != null)
@@ -47,7 +46,10 @@ namespace MultiTenantKit.TestBranch
                 var branch = _rootBuilder.New();
                 _pipeline(tCtx, branch);
 
-                _next = branch.Build();
+                var _next2 = branch.Build();
+
+                //execute the branched pipeline and then returns and continue executing the rest of unbranched pipeline
+                await _next2(httpContext);
             }
 
             await _next(httpContext);

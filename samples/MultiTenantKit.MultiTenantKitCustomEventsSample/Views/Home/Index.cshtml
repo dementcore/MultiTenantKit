@@ -1,0 +1,50 @@
+﻿@model IndexModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (Context.GetTenantContext<CustomTenant>() == null)
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>MultiTenantKit Custom Events Sample</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-danger text-center">
+            <h3>No tenant resolved!</h3>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>MultiTenantKit Custom Events Sample</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center">
+            <p>Tenant Id:</p>
+        </div>
+        <div class="col-6">
+            <p>@Model.TenantId</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center">
+            <p>Tenant Name:</p>
+        </div>
+        <div class="col-6">
+            <p>@Model.TenantName</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center">
+            <p>Css Theme:</p>
+        </div>
+        <div class="col-6">
+            <p>@Model.TenantCssTheme</p>
+        </div>
+    </div>
+}
